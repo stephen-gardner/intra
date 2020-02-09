@@ -38,6 +38,32 @@ type (
 		LockedAt         time.Time `json:"locked_at"`
 		ClosedAt         time.Time `json:"closed_at"`
 		ProjectSessionID int       `json:"project_session_id"`
+		ScaleTeams       []struct {
+			ID        int       `json:"id"`
+			ScaleID   int       `json:"scale_id"`
+			Comment   string    `json:"comment"`
+			CreatedAt time.Time `json:"created_at"`
+			UpdatedAt time.Time `json:"updated_at"`
+			Feedback  string    `json:"feedback"`
+			FinalMark int       `json:"final_mark"`
+			Flag      struct {
+				ID        int       `json:"id"`
+				Name      string    `json:"name"`
+				Positive  bool      `json:"positive"`
+				Icon      string    `json:"icon"`
+				CreatedAt time.Time `json:"created_at"`
+				UpdatedAt time.Time `json:"updated_at"`
+			} `json:"flag"`
+			BeginAt  time.Time `json:"begin_at"`
+			FilledAt time.Time `json:"filled_at"`
+		} `json:"scale_teams"`
+		TeamUploads []struct {
+			ID        int       `json:"id"`
+			FinalMark int       `json:"final_mark"`
+			Comment   string    `json:"comment"`
+			CreatedAt time.Time `json:"created_at"`
+			UploadID  int       `json:"upload_id"`
+		} `json:"team_uploads"`
 	}
 	Teams []Team
 )
