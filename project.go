@@ -14,7 +14,6 @@ type (
 		Slug        string `json:"slug"`
 		Description string `json:"description"`
 		Exam        bool   `json:"exam"`
-
 	}
 	Projects []Project
 )
