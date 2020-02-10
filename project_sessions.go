@@ -2,7 +2,7 @@ package intra
 
 import (
 	"context"
-	"encoding/json"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -98,34 +98,26 @@ func (pSession *ProjectSession) GetProjectSession(ctx context.Context, bypassCac
 			return nil
 		}
 	}
-	params := url.Values{}
-	params.Set("filter[id]", IDStr)
-	params.Set("page[number]", "1")
 	pSessions := &ProjectSessions{}
-	err := pSessions.GetAllProjectSessions(ctx, bypassCache, params)
-	if err == nil && len(*pSessions) > 0 {
-		*pSession = (*pSessions)[0]
+	if err := pSessions.GetAllProjectSessions(ctx, bypassCache, getSingleParams(IDStr)); err != nil {
+		return err
 	}
-	return err
+	if len(*pSessions) == 0 {
+		return fmt.Errorf("project session %d does not exist", ID)
+	}
+	*pSession = (*pSessions)[0]
+	return nil
 }
 
 func (pSessions *ProjectSessions) GetAllProjectSessions(ctx context.Context, bypassCache bool, params url.Values) error {
-	data, err := GetAll(GetClient(ctx, "public"), "project_sessions", params)
-	if err != nil {
+	if err := GetAll(GetClient(ctx, "public"), "project_sessions", params, pSessions); err != nil {
 		return err
 	}
-	for _, dataPage := range data {
-		var page ProjectSessions
-		if err := json.Unmarshal(dataPage, &page); err != nil {
-			return err
+	if !bypassCache {
+		for _, pSession := range *pSessions {
+			endpoint := GetEndpoint("project_sessions/"+strconv.Itoa(pSession.ID), nil)
+			intraCache.put(endpoint, pSession)
 		}
-		if !bypassCache {
-			for _, pSession := range page {
-				endpoint := GetEndpoint("project_sessions/"+strconv.Itoa(pSession.ID), nil)
-				intraCache.put(endpoint, pSession)
-			}
-		}
-		*pSessions = append(*pSessions, page...)
 	}
 	return nil
 }

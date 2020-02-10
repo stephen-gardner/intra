@@ -2,7 +2,6 @@ package intra
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -86,11 +85,8 @@ func (team *Team) GetTeam(ctx context.Context, bypassCache bool, ID int) error {
 			return nil
 		}
 	}
-	params := url.Values{}
-	params.Set("filter[id]", IDStr)
-	params.Set("page[number]", "1")
 	teams := &Teams{}
-	if err := teams.GetAllTeams(ctx, bypassCache, params); err != nil {
+	if err := teams.GetAllTeams(ctx, bypassCache, getSingleParams(IDStr)); err != nil {
 		return err
 	}
 	if len(*teams) == 0 {
@@ -101,21 +97,13 @@ func (team *Team) GetTeam(ctx context.Context, bypassCache bool, ID int) error {
 }
 
 func (teams *Teams) GetAllTeams(ctx context.Context, bypassCache bool, params url.Values) error {
-	data, err := GetAll(GetClient(ctx, "public"), "teams", params)
-	if err != nil {
+	if err := GetAll(GetClient(ctx, "public"), "teams", params, teams); err != nil {
 		return err
 	}
-	for _, dataPage := range data {
-		var page Teams
-		if err := json.Unmarshal(dataPage, &page); err != nil {
-			return err
+	if !bypassCache {
+		for _, team := range *teams {
+			intraCache.put(team.URL, team)
 		}
-		if !bypassCache {
-			for _, team := range page {
-				intraCache.put(team.URL, team)
-			}
-		}
-		*teams = append(*teams, page...)
 	}
 	return nil
 }

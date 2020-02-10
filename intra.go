@@ -1,7 +1,9 @@
 package intra
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -61,8 +63,8 @@ func RunRequest(client *http.Client, method, endpoint string, formData url.Value
 	return resp.StatusCode, data, err
 }
 
-func GetAll(client *http.Client, endpoint string, params url.Values) ([][]byte, error) {
-	var res [][]byte
+func GetAll(client *http.Client, endpoint string, params url.Values, obj interface{}) error {
+	var data [][]byte
 	pageNumber := 1
 	singlePage := false
 	if _, ok := params["page[number]"]; ok {
@@ -74,16 +76,29 @@ func GetAll(client *http.Client, endpoint string, params url.Values) ([][]byte, 
 		endpoint := GetEndpoint(endpoint, params)
 		_, page, err := RunRequest(client, http.MethodGet, endpoint, nil)
 		if err != nil {
-			return res, err
+			return err
 		}
-		if singlePage {
-			return [][]byte{page}, nil
+		if string(page) != "[]" {
+			data = append(data, page[1:len(page)-1])
 		}
-		if string(page) == "[]" {
+		if singlePage || string(page) == "[]" {
 			break
 		}
-		res = append(res, page)
 		pageNumber++
 	}
-	return res, nil
+	if len(data) == 0 {
+		return nil
+	}
+	res := fmt.Sprintf("[%s]", string(bytes.Join(data, []byte(","))))
+	if err := json.Unmarshal([]byte(res), obj); err != nil {
+		return fmt.Errorf("%s: %s", err.Error(), res)
+	}
+	return nil
+}
+
+func getSingleParams(ID string) url.Values {
+	params := url.Values{}
+	params.Set("filter[id]", ID)
+	params.Set("page[number]", "1")
+	return params
 }
