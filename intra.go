@@ -11,6 +11,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"golang.org/x/oauth2/clientcredentials"
 )
@@ -32,7 +33,9 @@ func GetClient(ctx context.Context, scopes ...string) *http.Client {
 		TokenURL:     "https://api.intra.42.fr/oauth/token",
 		Scopes:       scopes,
 	}
-	return oauth.Client(ctx)
+	client := oauth.Client(ctx)
+	client.Timeout = 2 * time.Minute
+	return client
 }
 
 func GetEndpoint(path string, params url.Values) string {
