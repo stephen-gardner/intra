@@ -12,12 +12,22 @@ type (
 	}
 	objectCache struct {
 		sync.RWMutex
-		objects map[string]cachedObject
+		categories map[string]map[int]cachedObject
 	}
 )
 
+const (
+	catCloses          = "closes"
+	catCursusUsers     = "cursus_users"
+	catExperiences     = "experiences"
+	catLocations       = "locations"
+	catProjectSessions = "project_sessions"
+	catProjects        = "projects"
+	catTeams           = "teams"
+)
+
 var (
-	intraCache   = objectCache{objects: make(map[string]cachedObject)}
+	intraCache   = objectCache{categories: make(map[string]map[int]cachedObject)}
 	cacheTimeout = 30 * time.Minute
 )
 
@@ -27,9 +37,14 @@ func init() {
 			time.Sleep(time.Minute)
 			now := time.Now()
 			intraCache.Lock()
-			for key, cached := range intraCache.objects {
-				if now.Sub(cached.updatedAt) >= cacheTimeout {
-					delete(intraCache.objects, key)
+			for category, objects := range intraCache.categories {
+				for key, cached := range objects {
+					if now.Sub(cached.updatedAt) >= cacheTimeout {
+						delete(objects, key)
+					}
+				}
+				if len(objects) == 0 {
+					delete(intraCache.categories, category)
 				}
 			}
 			intraCache.Unlock()
@@ -37,27 +52,35 @@ func init() {
 	}()
 }
 
-func (cache objectCache) get(endpoint string) (obj interface{}, present bool) {
+func (cache objectCache) get(category string, ID int) (obj interface{}, present bool) {
+	var objects map[int]cachedObject
 	var cached cachedObject
 	intraCache.RLock()
-	cached, present = intraCache.objects[endpoint]
-	intraCache.RUnlock()
-	if !present {
-		return
+	if objects, present = intraCache.categories[category]; present {
+		cached, present = objects[ID]
 	}
-	return cached.object, true
+	intraCache.RUnlock()
+	if present {
+		obj = cached.object
+	}
+	return
 }
 
-func (cache objectCache) put(endpoint string, obj interface{}) (prev interface{}) {
+func (cache objectCache) put(category string, ID int, obj interface{}) (prev interface{}) {
 	cached := cachedObject{
 		object:    obj,
 		updatedAt: time.Now(),
 	}
 	intraCache.Lock()
-	if p, present := intraCache.objects[endpoint]; present {
+	objects, present := intraCache.categories[category]
+	if !present {
+		objects = make(map[int]cachedObject)
+		intraCache.categories[category] = objects
+	}
+	if p, present := objects[ID]; present {
 		prev = p.object
 	}
-	intraCache.objects[endpoint] = cached
+	objects[ID] = cached
 	intraCache.Unlock()
 	return
 }

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"strconv"
 	"time"
 )
 
@@ -91,34 +90,32 @@ type (
 	Projects []Project
 )
 
-func (project *Project) GetProject(ctx context.Context, bypassCache bool, ID int) error {
-	IDStr := strconv.Itoa(ID)
-	endpoint := GetEndpoint("projects/"+IDStr, nil)
+func (project *Project) Get(ctx context.Context, bypassCache bool) error {
 	if !bypassCache {
-		if proj, present := intraCache.get(endpoint); present {
-			*project = proj.(Project)
+		if proj, present := intraCache.get(catProjects, project.ID); present {
+			*project = *proj.(*Project)
 			return nil
 		}
 	}
 	projects := &Projects{}
-	if err := projects.GetAllProjects(ctx, bypassCache, getSingleParams(IDStr)); err != nil {
+	if err := projects.GetAll(ctx, bypassCache, getSingleParams(project.ID)); err != nil {
 		return err
 	}
 	if len(*projects) == 0 {
-		return fmt.Errorf("project %d does not exist", ID)
+		return fmt.Errorf("project %d does not exist", project.ID)
 	}
 	*project = (*projects)[0]
 	return nil
 }
 
-func (projects *Projects) GetAllProjects(ctx context.Context, bypassCache bool, params url.Values) error {
+func (projects *Projects) GetAll(ctx context.Context, bypassCache bool, params url.Values) error {
 	if err := GetAll(GetClient(ctx, "public"), "projects", params, projects); err != nil {
 		return err
 	}
 	if !bypassCache {
 		for _, proj := range *projects {
-			endpoint := GetEndpoint("projects/"+strconv.Itoa(proj.ID), nil)
-			intraCache.put(endpoint, proj)
+			cached := proj
+			intraCache.put(catProjects, cached.ID, &cached)
 		}
 	}
 	return nil

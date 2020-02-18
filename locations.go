@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"strconv"
 	"time"
 )
 
@@ -25,34 +24,32 @@ type (
 	Locations []Location
 )
 
-func (location *Location) GetLocation(ctx context.Context, bypassCache bool, ID int) error {
-	IDStr := strconv.Itoa(ID)
-	endpoint := GetEndpoint("locations/"+IDStr, nil)
+func (location *Location) Get(ctx context.Context, bypassCache bool) error {
 	if !bypassCache {
-		if loc, present := intraCache.get(endpoint); present {
-			*location = loc.(Location)
+		if loc, present := intraCache.get(catLocations, location.ID); present {
+			*location = *loc.(*Location)
 			return nil
 		}
 	}
 	locations := &Locations{}
-	if err := locations.GetAllLocations(ctx, bypassCache, getSingleParams(IDStr)); err != nil {
+	if err := locations.GetAll(ctx, bypassCache, getSingleParams(location.ID)); err != nil {
 		return err
 	}
 	if len(*locations) == 0 {
-		return fmt.Errorf("location %d does not exist", ID)
+		return fmt.Errorf("location %d does not exist", location.ID)
 	}
 	*location = (*locations)[0]
 	return nil
 }
 
-func (locations *Locations) GetAllLocations(ctx context.Context, bypassCache bool, params url.Values) error {
+func (locations *Locations) GetAll(ctx context.Context, bypassCache bool, params url.Values) error {
 	if err := GetAll(GetClient(ctx, "public"), "locations", params, locations); err != nil {
 		return err
 	}
 	if !bypassCache {
 		for _, loc := range *locations {
-			endpoint := GetEndpoint("locations/"+strconv.Itoa(loc.ID), nil)
-			intraCache.put(endpoint, loc)
+			cached := loc
+			intraCache.put(catLocations, cached.ID, &cached)
 		}
 	}
 	return nil

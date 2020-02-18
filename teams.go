@@ -67,42 +67,42 @@ type (
 	Teams []Team
 )
 
-func (team *Team) PatchTeam(ctx context.Context, bypassCache bool, params url.Values) (int, []byte, error) {
+func (team *Team) PatchTeam(ctx context.Context, bypassCache bool, params url.Values) (int, error) {
 	endpoint := GetEndpoint("teams/"+strconv.Itoa(team.ID), nil)
-	status, respData, err := RunRequest(GetClient(ctx, "public", "projects"), http.MethodPatch, endpoint, params)
+	status, _, err := RunRequest(GetClient(ctx, "public", "projects"), http.MethodPatch, endpoint, params)
 	if err == nil && !bypassCache {
-		intraCache.put(team.URL, *team)
+		cached := *team
+		intraCache.put(catTeams, cached.ID, &cached)
 	}
-	return status, respData, err
+	return status, err
 }
 
-func (team *Team) GetTeam(ctx context.Context, bypassCache bool, ID int) error {
-	IDStr := strconv.Itoa(ID)
-	endpoint := GetEndpoint("teams/"+IDStr, nil)
+func (team *Team) Get(ctx context.Context, bypassCache bool) error {
 	if !bypassCache {
-		if t, present := intraCache.get(endpoint); present {
-			*team = t.(Team)
+		if t, present := intraCache.get(catTeams, team.ID); present {
+			*team = *t.(*Team)
 			return nil
 		}
 	}
 	teams := &Teams{}
-	if err := teams.GetAllTeams(ctx, bypassCache, getSingleParams(IDStr)); err != nil {
+	if err := teams.GetAll(ctx, bypassCache, getSingleParams(team.ID)); err != nil {
 		return err
 	}
 	if len(*teams) == 0 {
-		return fmt.Errorf("team %d does not exist", ID)
+		return fmt.Errorf("team %d does not exist", team.ID)
 	}
 	*team = (*teams)[0]
 	return nil
 }
 
-func (teams *Teams) GetAllTeams(ctx context.Context, bypassCache bool, params url.Values) error {
+func (teams *Teams) GetAll(ctx context.Context, bypassCache bool, params url.Values) error {
 	if err := GetAll(GetClient(ctx, "public"), "teams", params, teams); err != nil {
 		return err
 	}
 	if !bypassCache {
 		for _, team := range *teams {
-			intraCache.put(team.URL, team)
+			cached := team
+			intraCache.put(catTeams, cached.ID, &cached)
 		}
 	}
 	return nil

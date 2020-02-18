@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"strconv"
 	"time"
 )
 
@@ -89,34 +88,32 @@ type (
 	ProjectSessions []ProjectSession
 )
 
-func (pSession *ProjectSession) GetProjectSession(ctx context.Context, bypassCache bool, ID int) error {
-	IDStr := strconv.Itoa(ID)
-	endpoint := GetEndpoint("project_sessions/"+IDStr, nil)
+func (pSession *ProjectSession) Get(ctx context.Context, bypassCache bool) error {
 	if !bypassCache {
-		if ps, present := intraCache.get(endpoint); present {
-			*pSession = ps.(ProjectSession)
+		if ps, present := intraCache.get(catProjectSessions, pSession.ID); present {
+			*pSession = *ps.(*ProjectSession)
 			return nil
 		}
 	}
 	pSessions := &ProjectSessions{}
-	if err := pSessions.GetAllProjectSessions(ctx, bypassCache, getSingleParams(IDStr)); err != nil {
+	if err := pSessions.GetAll(ctx, bypassCache, getSingleParams(pSession.ID)); err != nil {
 		return err
 	}
 	if len(*pSessions) == 0 {
-		return fmt.Errorf("project session %d does not exist", ID)
+		return fmt.Errorf("project session %d does not exist", pSession.ID)
 	}
 	*pSession = (*pSessions)[0]
 	return nil
 }
 
-func (pSessions *ProjectSessions) GetAllProjectSessions(ctx context.Context, bypassCache bool, params url.Values) error {
+func (pSessions *ProjectSessions) GetAll(ctx context.Context, bypassCache bool, params url.Values) error {
 	if err := GetAll(GetClient(ctx, "public"), "project_sessions", params, pSessions); err != nil {
 		return err
 	}
 	if !bypassCache {
 		for _, pSession := range *pSessions {
-			endpoint := GetEndpoint("project_sessions/"+strconv.Itoa(pSession.ID), nil)
-			intraCache.put(endpoint, pSession)
+			cached := pSession
+			intraCache.put(catProjectSessions, cached.ID, &cached)
 		}
 	}
 	return nil

@@ -16,6 +16,8 @@ import (
 	"golang.org/x/oauth2/clientcredentials"
 )
 
+const intraTimeFormat = "2006-01-02T15:04:05.000Z"
+
 var (
 	clientID     string
 	clientSecret string
@@ -99,9 +101,9 @@ func GetAll(client *http.Client, endpoint string, params url.Values, obj interfa
 	return nil
 }
 
-func getSingleParams(ID string) url.Values {
+func getSingleParams(ID int) url.Values {
 	params := url.Values{}
-	params.Set("filter[id]", ID)
+	params.Set("filter[id]", strconv.Itoa(ID))
 	params.Set("page[number]", "1")
 	return params
 }

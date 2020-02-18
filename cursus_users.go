@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"strconv"
 	"time"
 )
 
@@ -37,34 +36,32 @@ type (
 	CursusUsers []CursusUser
 )
 
-func (cursusUser *CursusUser) GetCursusUser(ctx context.Context, bypassCache bool, ID int) error {
-	IDStr := strconv.Itoa(ID)
-	endpoint := GetEndpoint("cursus_users/"+IDStr, nil)
+func (cursusUser *CursusUser) Get(ctx context.Context, bypassCache bool) error {
 	if !bypassCache {
-		if cu, present := intraCache.get(endpoint); present {
-			*cursusUser = cu.(CursusUser)
+		if cu, present := intraCache.get(catCursusUsers, cursusUser.ID); present {
+			*cursusUser = *cu.(*CursusUser)
 			return nil
 		}
 	}
 	cursusUsers := &CursusUsers{}
-	if err := cursusUsers.GetAllCursusUsers(ctx, bypassCache, getSingleParams(IDStr)); err != nil {
+	if err := cursusUsers.GetAll(ctx, bypassCache, getSingleParams(cursusUser.ID)); err != nil {
 		return err
 	}
 	if len(*cursusUsers) == 0 {
-		return fmt.Errorf("cursus user %d does not exist", ID)
+		return fmt.Errorf("cursus user %d does not exist", cursusUser.ID)
 	}
 	*cursusUser = (*cursusUsers)[0]
 	return nil
 }
 
-func (cursusUsers *CursusUsers) GetAllCursusUsers(ctx context.Context, bypassCache bool, params url.Values) error {
+func (cursusUsers *CursusUsers) GetAll(ctx context.Context, bypassCache bool, params url.Values) error {
 	if err := GetAll(GetClient(ctx, "public"), "cursus_users", params, cursusUsers); err != nil {
 		return err
 	}
 	if !bypassCache {
 		for _, cu := range *cursusUsers {
-			endpoint := GetEndpoint("cursus_users/"+strconv.Itoa(cu.ID), nil)
-			intraCache.put(endpoint, cu)
+			cached := cu
+			intraCache.put(catCursusUsers, cached.ID, &cached)
 		}
 	}
 	return nil
