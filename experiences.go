@@ -98,8 +98,27 @@ func (exp *Experience) Get(ctx context.Context, bypassCache bool) error {
 	return nil
 }
 
+func (experiences *Experiences) GetForProjectsUser(
+	ctx context.Context,
+	bypassCache bool,
+	projectsUserID int,
+	params url.Values,
+) error {
+	endpoint := fmt.Sprintf("projects_users/%d/experiences", projectsUserID)
+	return experiences.getAll(ctx, bypassCache, endpoint, params)
+}
+
 func (experiences *Experiences) GetAll(ctx context.Context, bypassCache bool, params url.Values) error {
-	if err := GetAll(GetClient(ctx, "public"), "experiences", params, experiences); err != nil {
+	return experiences.getAll(ctx, bypassCache, "experiences", params)
+}
+
+func (experiences *Experiences) getAll(
+	ctx context.Context,
+	bypassCache bool,
+	endpoint string,
+	params url.Values,
+) error {
+	if err := GetAll(GetClient(ctx, "public"), endpoint, params, experiences); err != nil {
 		return err
 	}
 	if !bypassCache {

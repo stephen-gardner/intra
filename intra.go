@@ -19,14 +19,9 @@ import (
 const intraTimeFormat = "2006-01-02T15:04:05.000Z"
 
 var (
-	clientID     string
-	clientSecret string
-)
-
-func init() {
-	clientID = os.Getenv("INTRA_CLIENT_ID")
+	clientID     = os.Getenv("INTRA_CLIENT_ID")
 	clientSecret = os.Getenv("INTRA_CLIENT_SECRET")
-}
+)
 
 func GetClient(ctx context.Context, scopes ...string) *http.Client {
 	oauth := clientcredentials.Config{
