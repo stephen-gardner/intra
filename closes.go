@@ -49,20 +49,20 @@ const (
 	CloseKindSeriousMisconduct = "serious_misconduct"
 )
 
-func (userClose *UserClose) Create(ctx context.Context, bypassCache bool, kind string) (int, error) {
+func (userClose *UserClose) Create(ctx context.Context, bypassCache bool, kind string) error {
 	endpoint := GetEndpoint(fmt.Sprintf("users/%d/closes", userClose.User.ID), nil)
 	params := url.Values{}
 	params.Set("close[closer_id]", strconv.Itoa(userClose.Closer.ID))
 	params.Set("close[kind]", kind)
 	params.Set("close[reason]", userClose.Reason)
-	status, respData, err := RunRequest(GetClient(ctx, "public", "tig"), http.MethodPost, endpoint, params)
+	_, respData, err := RunRequest(GetClient(ctx, "public", "tig"), http.MethodPost, endpoint, params)
 	if err == nil {
 		if err = json.Unmarshal(respData, userClose); err == nil && !bypassCache {
 			cached := *userClose
 			intraCache.put(catCloses, cached.ID, &cached)
 		}
 	}
-	return status, err
+	return err
 }
 
 func (userClose *UserClose) Delete(ctx context.Context) error {
@@ -74,10 +74,10 @@ func (userClose *UserClose) Delete(ctx context.Context) error {
 	return err
 }
 
-func (userClose *UserClose) Unclose(ctx context.Context, bypassCache bool) (int, error) {
+func (userClose *UserClose) Unclose(ctx context.Context, bypassCache bool) error {
 	client := GetClient(ctx, "public", "tig")
 	endpoint := GetEndpoint(fmt.Sprintf("closes/%d/unclose", userClose.ID), nil)
-	status, _, err := RunRequest(client, http.MethodPatch, endpoint, nil)
+	_, _, err := RunRequest(client, http.MethodPatch, endpoint, nil)
 	if err == nil {
 		userClose.State = "unclose"
 		if !bypassCache {
@@ -85,7 +85,7 @@ func (userClose *UserClose) Unclose(ctx context.Context, bypassCache bool) (int,
 			intraCache.put(catCloses, cached.ID, &cached)
 		}
 	}
-	return status, err
+	return err
 }
 
 func (userClose *UserClose) Get(ctx context.Context, bypassCache bool) error {

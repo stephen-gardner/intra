@@ -76,14 +76,14 @@ func (team *Team) Delete(ctx context.Context) error {
 	return err
 }
 
-func (team *Team) Patch(ctx context.Context, bypassCache bool, params url.Values) (int, error) {
+func (team *Team) Patch(ctx context.Context, bypassCache bool, params url.Values) error {
 	endpoint := GetEndpoint("teams/"+strconv.Itoa(team.ID), nil)
-	status, _, err := RunRequest(GetClient(ctx, "public", "projects"), http.MethodPatch, endpoint, params)
+	_, _, err := RunRequest(GetClient(ctx, "public", "projects"), http.MethodPatch, endpoint, params)
 	if err == nil && !bypassCache {
 		cached := *team
 		intraCache.put(catTeams, cached.ID, &cached)
 	}
-	return status, err
+	return err
 }
 
 func (team *Team) Get(ctx context.Context, bypassCache bool) error {
