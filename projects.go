@@ -3,7 +3,9 @@ package intra
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"net/url"
+	"strconv"
 	"time"
 )
 
@@ -89,6 +91,15 @@ type (
 	}
 	Projects []Project
 )
+
+func (project *Project) Delete(ctx context.Context) error {
+	endpoint := GetEndpoint("projects/"+strconv.Itoa(project.ID), nil)
+	_, _, err := RunRequest(GetClient(ctx, "public", "projects"), http.MethodDelete, endpoint, nil)
+	if err == nil {
+		intraCache.delete(catProjects, project.ID)
+	}
+	return err
+}
 
 func (project *Project) Get(ctx context.Context, bypassCache bool) error {
 	if !bypassCache {

@@ -58,7 +58,7 @@ type (
 	Experiences []Experience
 )
 
-func (exp *Experience) Create(ctx context.Context, bypassCache bool) (int, error) {
+func (exp *Experience) Create(ctx context.Context, bypassCache bool) error {
 	endpoint := GetEndpoint("experiences", nil)
 	params := url.Values{}
 	params.Set("experience[user_id]", strconv.Itoa(exp.UserID))
@@ -70,14 +70,23 @@ func (exp *Experience) Create(ctx context.Context, bypassCache bool) (int, error
 		params.Set("experience[created_at]", exp.CreatedAt.Format(intraTimeFormat))
 	}
 	params.Set("experience[cursus_id]", strconv.Itoa(exp.CursusID))
-	status, respData, err := RunRequest(GetClient(ctx, "public"), http.MethodPost, endpoint, params)
+	_, respData, err := RunRequest(GetClient(ctx, "public"), http.MethodPost, endpoint, params)
 	if err == nil {
 		if err = json.Unmarshal(respData, exp); err == nil && !bypassCache {
 			cached := *exp
 			intraCache.put(catExperiences, cached.ID, &cached)
 		}
 	}
-	return status, err
+	return err
+}
+
+func (exp *Experience) Delete(ctx context.Context) error {
+	endpoint := GetEndpoint("experiences/"+strconv.Itoa(exp.ID), nil)
+	_, _, err := RunRequest(GetClient(ctx, "public"), http.MethodDelete, endpoint, nil)
+	if err == nil {
+		intraCache.delete(catExperiences, exp.ID)
+	}
+	return err
 }
 
 func (exp *Experience) Get(ctx context.Context, bypassCache bool) error {

@@ -65,6 +65,15 @@ func (userClose *UserClose) Create(ctx context.Context, bypassCache bool, kind s
 	return status, err
 }
 
+func (userClose *UserClose) Delete(ctx context.Context) error {
+	endpoint := GetEndpoint("closes/"+strconv.Itoa(userClose.ID), nil)
+	_, _, err := RunRequest(GetClient(ctx, "public", "tig"), http.MethodDelete, endpoint, nil)
+	if err == nil {
+		intraCache.delete(catCloses, userClose.ID)
+	}
+	return err
+}
+
 func (userClose *UserClose) Unclose(ctx context.Context, bypassCache bool) (int, error) {
 	client := GetClient(ctx, "public", "tig")
 	endpoint := GetEndpoint(fmt.Sprintf("closes/%d/unclose", userClose.ID), nil)

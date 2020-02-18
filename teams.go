@@ -67,7 +67,16 @@ type (
 	Teams []Team
 )
 
-func (team *Team) PatchTeam(ctx context.Context, bypassCache bool, params url.Values) (int, error) {
+func (team *Team) Delete(ctx context.Context) error {
+	endpoint := GetEndpoint("teams/"+strconv.Itoa(team.ID), nil)
+	_, _, err := RunRequest(GetClient(ctx, "public", "projects"), http.MethodDelete, endpoint, nil)
+	if err == nil {
+		intraCache.delete(catTeams, team.ID)
+	}
+	return err
+}
+
+func (team *Team) Patch(ctx context.Context, bypassCache bool, params url.Values) (int, error) {
 	endpoint := GetEndpoint("teams/"+strconv.Itoa(team.ID), nil)
 	status, _, err := RunRequest(GetClient(ctx, "public", "projects"), http.MethodPatch, endpoint, params)
 	if err == nil && !bypassCache {

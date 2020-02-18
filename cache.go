@@ -52,6 +52,18 @@ func init() {
 	}()
 }
 
+func (cache objectCache) delete(category string, ID int) (prev interface{}) {
+	intraCache.Lock()
+	if objects, present := intraCache.categories[category]; present {
+		if p, present := objects[ID]; present {
+			prev = p.object
+			delete(objects, ID)
+		}
+	}
+	intraCache.Unlock()
+	return
+}
+
 func (cache objectCache) get(category string, ID int) (obj interface{}, present bool) {
 	var objects map[int]cachedObject
 	var cached cachedObject
