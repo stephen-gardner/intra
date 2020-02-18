@@ -67,6 +67,9 @@ func GetAll(client *http.Client, endpoint string, params url.Values, obj interfa
 	var data [][]byte
 	pageNumber := 1
 	singlePage := false
+	if params == nil {
+		params = url.Values{}
+	}
 	if _, ok := params["page[number]"]; ok {
 		pageNumber, _ = strconv.Atoi(params.Get("page[number]"))
 		singlePage = true
