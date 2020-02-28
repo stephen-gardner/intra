@@ -1,4 +1,4 @@
-package intra
+package ftobj
 
 import (
 	"strings"
@@ -22,13 +22,15 @@ type (
 			URL   string `json:"url"`
 		} `json:"leader"`
 		Users []struct {
-			UsualFullName string                          `json:"usual_full_name"`
-			Location      string                          `json:"location"`
-			Cursus        []map[string]map[string]float64 `json:"cursus"`
-			Login         string                          `json:"login"`
-			Email         string                          `json:"email"`
-			FullName      string                          `json:"full_name"`
-			ImageURL      string                          `json:"image_url"`
+			UsualFullName string `json:"usual_full_name"`
+			Location      string `json:"location"`
+			Cursus        []map[string]struct {
+				Level float64 `json:"level"`
+			} `json:"cursus"`
+			Login    string `json:"login"`
+			Email    string `json:"email"`
+			FullName string `json:"full_name"`
+			ImageURL string `json:"image_url"`
 		} `json:"users"`
 		RepoURL         string  `json:"repo_url"`
 		RepoUUID        string  `json:"repo_uuid"`
@@ -47,6 +49,7 @@ func (wt *WebTime) UnmarshalJSON(data []byte) error {
 		wt.Time = time.Time{}
 		return nil
 	}
+	// Default to local time, as Intra webhooks will try to return locally formatted time
 	date, err := time.ParseInLocation(webTimeFormat, raw, time.Local)
 	if err == nil {
 		wt.Time = date
