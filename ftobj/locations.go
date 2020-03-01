@@ -37,7 +37,7 @@ type (
 	}
 )
 
-func (ps *Location) Create(ctx context.Context, params LocationCUParams) ftapi.BasicRequest {
+func (ps *Location) Create(ctx context.Context, params LocationCUParams) ftapi.CachedRequest {
 	ps.req.Endpoint = ftapi.GetEndpoint("locations", nil)
 	ps.req.ExecuteMethod = func() {
 		ps.req.Create(ftapi.GetClient(ctx, "public"), ps, params)
@@ -53,7 +53,7 @@ func (ps *Location) Delete(ctx context.Context) ftapi.Request {
 	return &ps.req
 }
 
-func (ps *Location) Patch(ctx context.Context, params LocationCUParams) ftapi.BasicRequest {
+func (ps *Location) Patch(ctx context.Context, params LocationCUParams) ftapi.Request {
 	ps.req.Endpoint = ftapi.GetEndpoint("locations/"+strconv.Itoa(ps.ID), nil)
 	ps.req.ExecuteMethod = func() {
 		ps.req.Patch(ftapi.GetClient(ctx, "public"), ps, params)
@@ -61,7 +61,7 @@ func (ps *Location) Patch(ctx context.Context, params LocationCUParams) ftapi.Ba
 	return &ps.req
 }
 
-func (ps *Location) Get(ctx context.Context) ftapi.BasicRequest {
+func (ps *Location) Get(ctx context.Context) ftapi.CachedRequest {
 	ps.req.Endpoint = ftapi.GetEndpoint("locations/"+strconv.Itoa(ps.ID), nil)
 	ps.req.ExecuteMethod = func() {
 		ps.req.Get(ftapi.GetClient(ctx, "public"), ps)

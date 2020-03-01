@@ -4,6 +4,7 @@ import (
 	"reflect"
 	"sync"
 	"time"
+	"unsafe"
 )
 
 type (
@@ -102,6 +103,19 @@ func (cache objectCache) put(obj interface{}) (prev interface{}) {
 	objects[ID] = toCache
 	intraCache.Unlock()
 	return
+}
+
+// Puts object into cache if cache writes are enabled in RequestData
+func CacheObject(obj interface{}) (prev interface{}) {
+	field := reflect.Indirect(reflect.ValueOf(obj)).Field(0)
+	req := reflect.NewAt(
+		field.Type(),
+		unsafe.Pointer(field.UnsafeAddr()),
+	).Elem().Interface().(RequestData)
+	if req.bypassCacheWrite {
+		return
+	}
+	return intraCache.put(obj)
 }
 
 func SetCacheTimeout(minutes int) {

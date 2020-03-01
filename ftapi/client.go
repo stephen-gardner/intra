@@ -18,26 +18,20 @@ import (
 	"golang.org/x/oauth2/clientcredentials"
 )
 
-type (
-	RequestData struct {
-		ExecuteMethod    func()
-		Endpoint         string
-		Error            error
-		contentType      string
-		body             []byte
-		params           params
-		bypassCacheRead  bool
-		bypassCacheWrite bool
-	}
-	Time struct {
-		time.Time
-	}
-)
+type RequestData struct {
+	ExecuteMethod    func()
+	Endpoint         string
+	Error            error
+	contentType      string
+	body             []byte
+	params           params
+	bypassCacheRead  bool
+	bypassCacheWrite bool
+}
 
 const (
 	ContentTypeForm = "application/x-www-form-urlencoded"
 	ContentTypeJson = "application/json"
-	TimeFormat      = "2006-01-02T15:04:05.000Z"
 )
 
 var (
@@ -45,23 +39,6 @@ var (
 	clientSecret = os.Getenv("INTRA_CLIENT_SECRET")
 	rateLimit    = time.NewTicker(time.Second / 2)
 )
-
-func (it *Time) MarshalJSON() ([]byte, error) {
-	return []byte(fmt.Sprintf("%q", it.UTC().Format(TimeFormat))), nil
-}
-
-func (it *Time) UnmarshalJSON(data []byte) error {
-	raw := strings.Trim(string(data), "\"")
-	if raw == "null" {
-		it.Time = time.Time{}
-		return nil
-	}
-	date, err := time.Parse(TimeFormat, raw)
-	if err == nil {
-		it.Time = date
-	}
-	return err
-}
 
 func GetClient(ctx context.Context, scopes ...string) *http.Client {
 	oauth := clientcredentials.Config{
@@ -217,16 +194,11 @@ func (req *RequestData) GetAll(client *http.Client, objPtr interface{}) *Request
 }
 
 // Objects will have to be manually mutated after patching, as the 42 Intra API uses a different format for patching
+// Thus CacheObject should be called on these objects after mutation
 func (req *RequestData) Patch(client *http.Client, objPtr interface{}, params interface{}) *RequestData {
 	defer req.clean()
 	req.contentType = ContentTypeJson
 	req.body, _ = json.Marshal(params)
 	req.make(client, http.MethodPatch)
-	if req.Error == nil {
-		_ = json.Unmarshal(req.body, objPtr)
-		if !req.bypassCacheWrite {
-			intraCache.put(objPtr)
-		}
-	}
 	return req
 }

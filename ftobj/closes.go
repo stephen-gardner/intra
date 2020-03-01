@@ -58,7 +58,7 @@ const (
 	CloseKindSeriousMisconduct = "serious_misconduct"
 )
 
-func (uc *UserClose) Create(ctx context.Context, params UserCloseCUParams) ftapi.BasicRequest {
+func (uc *UserClose) Create(ctx context.Context, params UserCloseCUParams) ftapi.CachedRequest {
 	uc.req.Endpoint = ftapi.GetEndpoint("closes", nil)
 	uc.req.ExecuteMethod = func() {
 		uc.req.Create(ftapi.GetClient(ctx, "public", "tig"), uc, params)
@@ -74,7 +74,7 @@ func (uc *UserClose) Delete(ctx context.Context) ftapi.Request {
 	return &uc.req
 }
 
-func (uc *UserClose) Patch(ctx context.Context, params UserCloseCUParams) ftapi.BasicRequest {
+func (uc *UserClose) Patch(ctx context.Context, params UserCloseCUParams) ftapi.Request {
 	uc.req.Endpoint = ftapi.GetEndpoint("closes/"+strconv.Itoa(uc.ID), nil)
 	uc.req.ExecuteMethod = func() {
 		uc.req.Patch(ftapi.GetClient(ctx, "public", "tig"), uc, params)
@@ -82,7 +82,7 @@ func (uc *UserClose) Patch(ctx context.Context, params UserCloseCUParams) ftapi.
 	return &uc.req
 }
 
-func (uc *UserClose) Get(ctx context.Context) ftapi.BasicRequest {
+func (uc *UserClose) Get(ctx context.Context) ftapi.CachedRequest {
 	uc.req.Endpoint = ftapi.GetEndpoint("closes/"+strconv.Itoa(uc.ID), nil)
 	uc.req.ExecuteMethod = func() {
 		uc.req.Get(ftapi.GetClient(ctx, "public", "tig"), uc)
@@ -98,24 +98,28 @@ func (ucs *UserCloses) GetAll(ctx context.Context) ftapi.CollectionRequest {
 	return &ucs.req
 }
 
-func (uc *UserClose) Reclose(ctx context.Context) ftapi.BasicRequest {
+func (uc *UserClose) Reclose(ctx context.Context) ftapi.CachedRequest {
 	uc.req.Endpoint = ftapi.GetEndpoint(fmt.Sprintf("closes/%d/close", uc.ID), nil)
 	uc.req.ExecuteMethod = func() {
 		err := uc.req.Patch(ftapi.GetClient(ctx, "public", "tig"), uc, nil).Error
-		if err == nil {
-			uc.State = "close"
+		if err != nil {
+			return
 		}
+		uc.State = "close"
+		ftapi.CacheObject(uc)
 	}
 	return &uc.req
 }
 
-func (uc *UserClose) Unclose(ctx context.Context) ftapi.BasicRequest {
+func (uc *UserClose) Unclose(ctx context.Context) ftapi.CachedRequest {
 	uc.req.Endpoint = ftapi.GetEndpoint(fmt.Sprintf("closes/%d/unclose", uc.ID), nil)
 	uc.req.ExecuteMethod = func() {
 		err := uc.req.Patch(ftapi.GetClient(ctx, "public", "tig"), uc, nil).Error
-		if err == nil {
-			uc.State = "unclose"
+		if err != nil {
+			return
 		}
+		uc.State = "unclose"
+		ftapi.CacheObject(uc)
 	}
 	return &uc.req
 }

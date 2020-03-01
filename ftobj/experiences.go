@@ -69,7 +69,7 @@ type (
 	}
 )
 
-func (exp *Experience) Create(ctx context.Context, params ExperienceCUParams) ftapi.BasicRequest {
+func (exp *Experience) Create(ctx context.Context, params ExperienceCUParams) ftapi.CachedRequest {
 	exp.req.Endpoint = ftapi.GetEndpoint("experiences", nil)
 	exp.req.ExecuteMethod = func() {
 		exp.req.Create(ftapi.GetClient(ctx, "public"), exp, params)
@@ -85,7 +85,7 @@ func (exp *Experience) Delete(ctx context.Context) ftapi.Request {
 	return &exp.req
 }
 
-func (exp *Experience) Patch(ctx context.Context, params ExperienceCUParams) ftapi.BasicRequest {
+func (exp *Experience) Patch(ctx context.Context, params ExperienceCUParams) ftapi.Request {
 	exp.req.Endpoint = ftapi.GetEndpoint("experiences/"+strconv.Itoa(exp.ID), nil)
 	exp.req.ExecuteMethod = func() {
 		exp.req.Patch(ftapi.GetClient(ctx, "public"), exp, params)
@@ -93,7 +93,7 @@ func (exp *Experience) Patch(ctx context.Context, params ExperienceCUParams) fta
 	return &exp.req
 }
 
-func (exp *Experience) Get(ctx context.Context) ftapi.BasicRequest {
+func (exp *Experience) Get(ctx context.Context) ftapi.CachedRequest {
 	exp.req.Endpoint = ftapi.GetEndpoint("experiences/"+strconv.Itoa(exp.ID), nil)
 	exp.req.ExecuteMethod = func() {
 		exp.req.Get(ftapi.GetClient(ctx, "public"), exp)

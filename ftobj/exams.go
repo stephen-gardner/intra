@@ -85,7 +85,7 @@ type (
 	}
 )
 
-func (exam *Exam) Create(ctx context.Context, params ExamCUParams) ftapi.BasicRequest {
+func (exam *Exam) Create(ctx context.Context, params ExamCUParams) ftapi.CachedRequest {
 	exam.req.Endpoint = ftapi.GetEndpoint("exams", nil)
 	exam.req.ExecuteMethod = func() {
 		exam.req.Create(ftapi.GetClient(ctx, "public"), exam, params)
@@ -101,7 +101,7 @@ func (exam *Exam) Delete(ctx context.Context) ftapi.Request {
 	return &exam.req
 }
 
-func (exam *Exam) Patch(ctx context.Context, params ExamCUParams) ftapi.BasicRequest {
+func (exam *Exam) Patch(ctx context.Context, params ExamCUParams) ftapi.Request {
 	exam.req.Endpoint = ftapi.GetEndpoint("exams/"+strconv.Itoa(exam.ID), nil)
 	exam.req.ExecuteMethod = func() {
 		exam.req.Patch(ftapi.GetClient(ctx, "public"), exam, params)
@@ -109,7 +109,7 @@ func (exam *Exam) Patch(ctx context.Context, params ExamCUParams) ftapi.BasicReq
 	return &exam.req
 }
 
-func (exam *Exam) Get(ctx context.Context) ftapi.BasicRequest {
+func (exam *Exam) Get(ctx context.Context) ftapi.CachedRequest {
 	exam.req.Endpoint = ftapi.GetEndpoint("exams/"+strconv.Itoa(exam.ID), nil)
 	exam.req.ExecuteMethod = func() {
 		exam.req.Get(ftapi.GetClient(ctx, "public"), exam)

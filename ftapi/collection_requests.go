@@ -6,7 +6,7 @@ import (
 )
 
 type CollectionRequest interface {
-	BasicRequest
+	CachedRequest
 	FilterBy(field string, values ...string) CollectionRequest
 	Params() RequestParams
 	RangeBy(field, minValue, maxValue string) CollectionRequest

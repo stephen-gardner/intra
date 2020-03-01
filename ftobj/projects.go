@@ -93,7 +93,7 @@ type (
 	}
 )
 
-func (proj *Project) Get(ctx context.Context) ftapi.BasicRequest {
+func (proj *Project) Get(ctx context.Context) ftapi.CachedRequest {
 	proj.req.Endpoint = ftapi.GetEndpoint("projects/"+strconv.Itoa(proj.ID), nil)
 	proj.req.ExecuteMethod = func() {
 		proj.req.Get(ftapi.GetClient(ctx, "public"), proj)

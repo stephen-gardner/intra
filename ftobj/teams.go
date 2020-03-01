@@ -88,7 +88,7 @@ type (
 	}
 )
 
-func (team *Team) Create(ctx context.Context, params TeamCUParams) ftapi.BasicRequest {
+func (team *Team) Create(ctx context.Context, params TeamCUParams) ftapi.CachedRequest {
 	team.req.Endpoint = ftapi.GetEndpoint("teams", nil)
 	team.req.ExecuteMethod = func() {
 		team.req.Create(ftapi.GetClient(ctx, "public", "projects"), team, params)
@@ -104,7 +104,7 @@ func (team *Team) Delete(ctx context.Context) ftapi.Request {
 	return &team.req
 }
 
-func (team *Team) Patch(ctx context.Context, params TeamCUParams) ftapi.BasicRequest {
+func (team *Team) Patch(ctx context.Context, params TeamCUParams) ftapi.Request {
 	team.req.Endpoint = ftapi.GetEndpoint("teams/"+strconv.Itoa(team.ID), nil)
 	team.req.ExecuteMethod = func() {
 		team.req.Patch(ftapi.GetClient(ctx, "public", "projects"), team, params)
@@ -112,7 +112,7 @@ func (team *Team) Patch(ctx context.Context, params TeamCUParams) ftapi.BasicReq
 	return &team.req
 }
 
-func (team *Team) Get(ctx context.Context) ftapi.BasicRequest {
+func (team *Team) Get(ctx context.Context) ftapi.CachedRequest {
 	team.req.Endpoint = ftapi.GetEndpoint("teams/"+strconv.Itoa(team.ID), nil)
 	team.req.ExecuteMethod = func() {
 		team.req.Get(ftapi.GetClient(ctx, "public"), team)

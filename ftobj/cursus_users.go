@@ -49,7 +49,7 @@ type (
 	}
 )
 
-func (cu *CursusUser) Create(ctx context.Context, params CursusUserCUParams) ftapi.BasicRequest {
+func (cu *CursusUser) Create(ctx context.Context, params CursusUserCUParams) ftapi.CachedRequest {
 	cu.req.Endpoint = ftapi.GetEndpoint("cursus_users", nil)
 	cu.req.ExecuteMethod = func() {
 		cu.req.Create(ftapi.GetClient(ctx, "public"), cu, params)
@@ -65,7 +65,7 @@ func (cu *CursusUser) Delete(ctx context.Context) ftapi.Request {
 	return &cu.req
 }
 
-func (cu *CursusUser) Patch(ctx context.Context, params CursusUserCUParams) ftapi.BasicRequest {
+func (cu *CursusUser) Patch(ctx context.Context, params CursusUserCUParams) ftapi.Request {
 	cu.req.Endpoint = ftapi.GetEndpoint("cursus_users/"+strconv.Itoa(cu.ID), nil)
 	cu.req.ExecuteMethod = func() {
 		cu.req.Patch(ftapi.GetClient(ctx, "public"), cu, params)
@@ -73,7 +73,7 @@ func (cu *CursusUser) Patch(ctx context.Context, params CursusUserCUParams) ftap
 	return &cu.req
 }
 
-func (cu *CursusUser) Get(ctx context.Context) ftapi.BasicRequest {
+func (cu *CursusUser) Get(ctx context.Context) ftapi.CachedRequest {
 	cu.req.Endpoint = ftapi.GetEndpoint("cursus_users/"+strconv.Itoa(cu.ID), nil)
 	cu.req.ExecuteMethod = func() {
 		cu.req.Get(ftapi.GetClient(ctx, "public"), cu)

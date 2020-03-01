@@ -8,26 +8,26 @@ type (
 	Request interface {
 		Execute() error
 	}
-	BasicRequest interface {
+	CachedRequest interface {
 		Request
-		BypassCache(bypass bool) BasicRequest
-		BypassCacheRead(bypass bool) BasicRequest
-		BypassCacheWrite(bypass bool) BasicRequest
+		BypassCache(bypass bool) CachedRequest
+		BypassCacheRead(bypass bool) CachedRequest
+		BypassCacheWrite(bypass bool) CachedRequest
 	}
 )
 
-func (req *RequestData) BypassCache(bypass bool) BasicRequest {
+func (req *RequestData) BypassCache(bypass bool) CachedRequest {
 	req.bypassCacheRead = bypass
 	req.bypassCacheWrite = bypass
 	return req
 }
 
-func (req *RequestData) BypassCacheRead(bypass bool) BasicRequest {
+func (req *RequestData) BypassCacheRead(bypass bool) CachedRequest {
 	req.bypassCacheRead = bypass
 	return req
 }
 
-func (req *RequestData) BypassCacheWrite(bypass bool) BasicRequest {
+func (req *RequestData) BypassCacheWrite(bypass bool) CachedRequest {
 	req.bypassCacheWrite = bypass
 	return req
 }
