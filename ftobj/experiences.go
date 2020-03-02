@@ -4,6 +4,7 @@ import (
 	"context"
 	"intra/ftapi"
 	"strconv"
+	"time"
 )
 
 type (
@@ -69,6 +70,32 @@ type (
 	}
 )
 
+var expLevels = []int{
+	0,
+	113,
+	241,
+	386,
+	551,
+	738,
+	950,
+	1190,
+	1462,
+	1770,
+	2119,
+	2515,
+	2963,
+	3471,
+	4046,
+	4698,
+	5437,
+	6274,
+	7223,
+	8298,
+	9516,
+	10896,
+	-1,
+}
+
 func (exp *Experience) Create(ctx context.Context, params ExperienceCUParams) ftapi.CachedRequest {
 	exp.req.Endpoint = ftapi.GetEndpoint("experiences", nil)
 	exp.req.ExecuteMethod = func() {
@@ -107,4 +134,24 @@ func (exps *Experiences) GetAll(ctx context.Context) ftapi.CollectionRequest {
 		exps.req.GetAll(ftapi.GetClient(ctx, "public"), &exps.Collection)
 	}
 	return &exps.req
+}
+
+func GetLevel(exp int) int {
+	for level, expReq := range expLevels {
+		if exp < expReq || expReq == -1.0 {
+			return level - 1
+		}
+	}
+	return 0
+}
+
+func (exps *Experiences) LevelAt(cursusID int, when time.Time) int {
+	totalExp := 0
+	for _, exp := range exps.Collection {
+		if exp.CursusID != cursusID || exp.CreatedAt.After(when) {
+			continue
+		}
+		totalExp += exp.Amount
+	}
+	return GetLevel(totalExp)
 }
