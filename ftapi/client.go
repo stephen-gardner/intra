@@ -67,15 +67,7 @@ func SetRateLimit(requestsPerSecond int) {
 	rateLimit = time.NewTicker(time.Second / time.Duration(requestsPerSecond))
 }
 
-func (req *RequestData) clean() {
-	if req.Error == nil {
-		req.ExecuteMethod = nil
-		req.params.Clear()
-		req.body = nil
-	}
-}
-
-func (req *RequestData) make(client *http.Client, method string) (status int, body []byte) {
+func (req *RequestData) Make(client *http.Client, method string) (status int, body []byte) {
 	<-rateLimit.C
 	var requestBody io.Reader
 	switch req.contentType {
@@ -104,11 +96,11 @@ func (req *RequestData) Create(client *http.Client, objPtr, params interface{}) 
 	defer req.clean()
 	req.contentType = ContentTypeJson
 	req.body, _ = json.Marshal(params)
-	_, body := req.make(client, http.MethodPost)
+	_, body := req.Make(client, http.MethodPost)
 	if req.Error == nil {
 		req.Error = json.Unmarshal(body, objPtr)
 	}
-	if req.Error == nil && !req.bypassCacheWrite {
+	if req.Error == nil && req.cacheWriteEnabled() {
 		intraCache.put(objPtr)
 	}
 	return req
@@ -117,24 +109,26 @@ func (req *RequestData) Create(client *http.Client, objPtr, params interface{}) 
 func (req *RequestData) Delete(client *http.Client, objPtr interface{}) *RequestData {
 	defer req.clean()
 	req.contentType = ContentTypeForm
-	_, body := req.make(client, http.MethodDelete)
+	_, body := req.Make(client, http.MethodDelete)
 	if req.Error != nil {
 		value := reflect.Indirect(reflect.ValueOf(objPtr))
 		ID := value.FieldByName("ID").Interface().(int)
 		req.Error = fmt.Errorf("%s: (%d) %s: %s", value.Type().String(), ID, req.Error, string(body))
 		return req
 	}
-	intraCache.delete(objPtr)
+	if intraCache.isEnabled() {
+		intraCache.delete(objPtr)
+	}
 	return req
 }
 
 func (req *RequestData) Get(client *http.Client, objPtr interface{}) *RequestData {
 	defer req.clean()
 	req.contentType = ContentTypeForm
-	if !req.bypassCacheRead && intraCache.get(objPtr) {
+	if req.cacheReadEnabled() && intraCache.get(objPtr) {
 		return req
 	}
-	_, body := req.make(client, http.MethodGet)
+	_, body := req.Make(client, http.MethodGet)
 	if req.Error == nil {
 		req.Error = json.Unmarshal(body, objPtr)
 	}
@@ -142,7 +136,7 @@ func (req *RequestData) Get(client *http.Client, objPtr interface{}) *RequestDat
 		value := reflect.Indirect(reflect.ValueOf(objPtr))
 		ID := value.FieldByName("ID").Interface().(int)
 		req.Error = fmt.Errorf("%s (%d): %s: %s", value.Type().String(), ID, req.Error, string(body))
-	} else if !req.bypassCacheWrite {
+	} else if req.cacheWriteEnabled() {
 		intraCache.put(objPtr)
 	}
 	return req
@@ -162,7 +156,7 @@ func (req *RequestData) GetAll(client *http.Client, objPtr interface{}) *Request
 	data.WriteByte('[')
 	for {
 		req.params.Set("page[number]", strconv.Itoa(pageNumber))
-		_, page := req.make(client, http.MethodGet)
+		_, page := req.Make(client, http.MethodGet)
 		if req.Error != nil {
 			req.Error = fmt.Errorf("%s: %s: %s", value.Type().String(), req.Error, string(page))
 			return req
@@ -185,20 +179,38 @@ func (req *RequestData) GetAll(client *http.Client, objPtr interface{}) *Request
 	req.Error = json.Unmarshal(data.Bytes(), objPtr)
 	if req.Error != nil {
 		req.Error = fmt.Errorf("%s: %s", value.Type().String(), req.Error)
-	} else if !req.bypassCacheWrite {
+	} else if req.cacheWriteEnabled() {
 		for i := 0; i < value.Len(); i++ {
-			intraCache.put(value.Index(i).Interface())
+			ptr := reflect.New(value.Index(i).Type())
+			ptr.Elem().Set(value.Index(i))
+			intraCache.put(ptr.Interface())
 		}
 	}
 	return req
 }
 
 // Objects will have to be manually mutated after patching, as the 42 Intra API uses a different format for patching
-// Thus CacheObject should be called on these objects after mutation
+// Thus CacheObject() should be called on these objects after mutation
 func (req *RequestData) Patch(client *http.Client, objPtr interface{}, params interface{}) *RequestData {
 	defer req.clean()
 	req.contentType = ContentTypeJson
 	req.body, _ = json.Marshal(params)
-	req.make(client, http.MethodPatch)
+	req.Make(client, http.MethodPatch)
 	return req
+}
+
+func (req *RequestData) clean() {
+	if req.Error == nil {
+		req.ExecuteMethod = nil
+		req.params.Clear()
+		req.body = nil
+	}
+}
+
+func (req *RequestData) cacheWriteEnabled() bool {
+	return intraCache.isEnabled() && !req.bypassCacheWrite
+}
+
+func (req *RequestData) cacheReadEnabled() bool {
+	return intraCache.isEnabled() && !req.bypassCacheRead
 }

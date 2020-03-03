@@ -1,6 +1,7 @@
 package ftapi
 
 import (
+	"encoding/json"
 	"reflect"
 	"sync"
 	"time"
@@ -9,19 +10,22 @@ import (
 
 type (
 	cachedObject struct {
-		object    interface{}
+		data      json.RawMessage
 		updatedAt time.Time
 	}
 	objectCache struct {
 		sync.RWMutex
-		types map[string]map[int]cachedObject
+		types   map[string]map[int]cachedObject
+		timeout time.Duration
+		enabled bool
 	}
 )
 
-var (
-	intraCache   = objectCache{types: make(map[string]map[int]cachedObject)}
-	cacheTimeout = 30 * time.Minute
-)
+var intraCache = objectCache{
+	types:   make(map[string]map[int]cachedObject),
+	timeout: 30 * time.Minute,
+	enabled: true,
+}
 
 func init() {
 	go func() {
@@ -31,7 +35,7 @@ func init() {
 			intraCache.Lock()
 			for typeName, objects := range intraCache.types {
 				for key, cached := range objects {
-					if now.Sub(cached.updatedAt) >= cacheTimeout {
+					if now.Sub(cached.updatedAt) >= intraCache.timeout {
 						delete(objects, key)
 					}
 				}
@@ -50,7 +54,7 @@ func (cache objectCache) delete(obj interface{}) (prev interface{}) {
 	intraCache.Lock()
 	if objects, present := intraCache.types[value.Type().String()]; present {
 		if p, present := objects[ID]; present {
-			prev = p.object
+			prev = p.data
 			delete(objects, ID)
 		}
 	}
@@ -69,28 +73,20 @@ func (cache objectCache) get(obj interface{}) (present bool) {
 	}
 	intraCache.RUnlock()
 	if present {
-		// Load object from cache without overwriting RequestData
-		dup := reflect.ValueOf(cached.object)
-		for i := 1; i < value.NumField(); i++ {
-			value.Field(i).Set(dup.Field(i))
-		}
+		_ = json.Unmarshal(cached.data, obj)
 	}
 	return
 }
 
 func (cache objectCache) put(obj interface{}) (prev interface{}) {
-	value := reflect.Indirect(reflect.ValueOf(obj))
-	// Copy object, without hanging on to RequestData
-	dup := reflect.New(value.Type()).Elem()
-	for i := 1; i < value.NumField(); i++ {
-		dup.Field(i).Set(value.Field(i))
-	}
+	data, _ := json.Marshal(obj)
 	toCache := cachedObject{
-		object:    dup.Interface(),
+		data:      data,
 		updatedAt: time.Now(),
 	}
-	typeName := dup.Type().String()
-	ID := dup.FieldByName("ID").Interface().(int)
+	value := reflect.Indirect(reflect.ValueOf(obj))
+	typeName := value.Type().String()
+	ID := value.FieldByName("ID").Interface().(int)
 	intraCache.Lock()
 	objects, present := intraCache.types[typeName]
 	if !present {
@@ -98,15 +94,25 @@ func (cache objectCache) put(obj interface{}) (prev interface{}) {
 		intraCache.types[typeName] = objects
 	}
 	if cached, present := objects[ID]; present {
-		prev = cached.object
+		prev = cached.data
 	}
 	objects[ID] = toCache
 	intraCache.Unlock()
 	return
 }
 
+func (cache objectCache) isEnabled() bool {
+	intraCache.RLock()
+	enabled := intraCache.enabled
+	intraCache.RUnlock()
+	return enabled
+}
+
 // Puts object into cache if cache writes are enabled in RequestData
 func CacheObject(obj interface{}) (prev interface{}) {
+	if !intraCache.isEnabled() {
+		return
+	}
 	field := reflect.Indirect(reflect.ValueOf(obj)).Field(0)
 	req := reflect.NewAt(
 		field.Type(),
@@ -118,6 +124,23 @@ func CacheObject(obj interface{}) (prev interface{}) {
 	return intraCache.put(obj)
 }
 
+func SetCacheEnabled(enabled bool) {
+	intraCache.Lock()
+	intraCache.enabled = enabled
+	intraCache.Unlock()
+	if !enabled {
+		FlushCache()
+	}
+}
+
 func SetCacheTimeout(minutes int) {
-	cacheTimeout = time.Duration(minutes) * time.Minute
+	intraCache.Lock()
+	intraCache.timeout = time.Duration(minutes) * time.Minute
+	intraCache.Unlock()
+}
+
+func FlushCache() {
+	intraCache.Lock()
+	intraCache.types = make(map[string]map[int]cachedObject)
+	intraCache.Unlock()
 }
