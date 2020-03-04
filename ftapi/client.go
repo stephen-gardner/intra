@@ -19,14 +19,14 @@ import (
 )
 
 type RequestData struct {
-	ExecuteMethod    func()
-	Endpoint         string
-	Error            error
-	contentType      string
-	body             []byte
-	params           params
-	bypassCacheRead  bool
-	bypassCacheWrite bool
+	Error              error
+	ExecuteMethod      func()
+	Endpoint           string
+	ContentType        string
+	Body               []byte
+	Params             Params
+	CacheReadBypassed  bool
+	CacheWriteBypassed bool
 }
 
 const (
@@ -73,18 +73,26 @@ func EncapsulatedMarshal(container string, params interface{}) json.RawMessage {
 	return data
 }
 
+func (req *RequestData) Clean() {
+	if req.Error == nil {
+		req.ExecuteMethod = nil
+		req.Params.Clear()
+		req.Body = nil
+	}
+}
+
 func (req *RequestData) Make(client *http.Client, method string) (status int, body []byte) {
 	<-rateLimit.C
 	var requestBody io.Reader
-	switch req.contentType {
+	switch req.ContentType {
 	case ContentTypeForm:
-		requestBody = strings.NewReader(req.params.Encode())
+		requestBody = strings.NewReader(req.Params.Encode())
 	case ContentTypeJson:
-		requestBody = bytes.NewReader(req.body)
+		requestBody = bytes.NewReader(req.Body)
 	}
 	var finalReq *http.Request
 	if finalReq, req.Error = http.NewRequest(method, req.Endpoint, requestBody); req.Error == nil {
-		finalReq.Header.Add("Content-Type", req.contentType)
+		finalReq.Header.Add("Content-Type", req.ContentType)
 		var resp *http.Response
 		if resp, req.Error = client.Do(finalReq); req.Error == nil {
 			defer resp.Body.Close()
@@ -99,9 +107,9 @@ func (req *RequestData) Make(client *http.Client, method string) (status int, bo
 }
 
 func (req *RequestData) Create(client *http.Client, objPtr interface{}, params json.RawMessage) *RequestData {
-	defer req.clean()
-	req.contentType = ContentTypeJson
-	req.body = params
+	defer req.Clean()
+	req.ContentType = ContentTypeJson
+	req.Body = params
 	_, body := req.Make(client, http.MethodPost)
 	if req.Error == nil {
 		req.Error = json.Unmarshal(body, objPtr)
@@ -113,8 +121,8 @@ func (req *RequestData) Create(client *http.Client, objPtr interface{}, params j
 }
 
 func (req *RequestData) Delete(client *http.Client, objPtr interface{}) *RequestData {
-	defer req.clean()
-	req.contentType = ContentTypeForm
+	defer req.Clean()
+	req.ContentType = ContentTypeForm
 	_, body := req.Make(client, http.MethodDelete)
 	if req.Error != nil {
 		value := reflect.Indirect(reflect.ValueOf(objPtr))
@@ -129,8 +137,8 @@ func (req *RequestData) Delete(client *http.Client, objPtr interface{}) *Request
 }
 
 func (req *RequestData) Get(client *http.Client, objPtr interface{}) *RequestData {
-	defer req.clean()
-	req.contentType = ContentTypeForm
+	defer req.Clean()
+	req.ContentType = ContentTypeForm
 	if req.cacheReadEnabled() && intraCache.get(objPtr) {
 		return req
 	}
@@ -149,19 +157,19 @@ func (req *RequestData) Get(client *http.Client, objPtr interface{}) *RequestDat
 }
 
 func (req *RequestData) GetAll(client *http.Client, objPtr interface{}) *RequestData {
-	defer req.clean()
-	req.contentType = ContentTypeForm
+	defer req.Clean()
+	req.ContentType = ContentTypeForm
 	value := reflect.Indirect(reflect.ValueOf(objPtr))
 	pageNumber := 1
 	singlePage := false
-	if _, present := req.params.Values["page[number]"]; present {
-		pageNumber, _ = strconv.Atoi(req.params.Get("page[number]"))
+	if _, present := req.Params.Values["page[number]"]; present {
+		pageNumber, _ = strconv.Atoi(req.Params.Get("page[number]"))
 		singlePage = true
 	}
 	data := bytes.Buffer{}
 	data.WriteByte('[')
 	for {
-		req.params.Set("page[number]", strconv.Itoa(pageNumber))
+		req.Params.Set("page[number]", strconv.Itoa(pageNumber))
 		_, page := req.Make(client, http.MethodGet)
 		if req.Error != nil {
 			req.Error = fmt.Errorf("%s: %s: %s", value.Type().String(), req.Error, string(page))
@@ -198,25 +206,17 @@ func (req *RequestData) GetAll(client *http.Client, objPtr interface{}) *Request
 // Objects will have to be manually mutated after patching, as the 42 Intra API uses a different format for patching
 // Thus CacheObject() should be called on these objects after mutation
 func (req *RequestData) Patch(client *http.Client, objPtr interface{}, params json.RawMessage) *RequestData {
-	defer req.clean()
-	req.contentType = ContentTypeJson
-	req.body = params
+	defer req.Clean()
+	req.ContentType = ContentTypeJson
+	req.Body = params
 	req.Make(client, http.MethodPatch)
 	return req
 }
 
-func (req *RequestData) clean() {
-	if req.Error == nil {
-		req.ExecuteMethod = nil
-		req.params.Clear()
-		req.body = nil
-	}
-}
-
 func (req *RequestData) cacheWriteEnabled() bool {
-	return intraCache.isEnabled() && !req.bypassCacheWrite
+	return intraCache.isEnabled() && !req.CacheWriteBypassed
 }
 
 func (req *RequestData) cacheReadEnabled() bool {
-	return intraCache.isEnabled() && !req.bypassCacheRead
+	return intraCache.isEnabled() && !req.CacheReadBypassed
 }

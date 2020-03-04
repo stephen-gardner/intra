@@ -17,18 +17,18 @@ type (
 )
 
 func (req *RequestData) BypassCache(bypass bool) CachedRequest {
-	req.bypassCacheRead = bypass
-	req.bypassCacheWrite = bypass
+	req.CacheReadBypassed = bypass
+	req.CacheWriteBypassed = bypass
 	return req
 }
 
 func (req *RequestData) BypassCacheRead(bypass bool) CachedRequest {
-	req.bypassCacheRead = bypass
+	req.CacheReadBypassed = bypass
 	return req
 }
 
 func (req *RequestData) BypassCacheWrite(bypass bool) CachedRequest {
-	req.bypassCacheWrite = bypass
+	req.CacheWriteBypassed = bypass
 	return req
 }
 

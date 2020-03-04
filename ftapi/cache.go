@@ -118,7 +118,7 @@ func CacheObject(obj interface{}) (prev interface{}) {
 		field.Type(),
 		unsafe.Pointer(field.UnsafeAddr()),
 	).Elem().Interface().(RequestData)
-	if req.bypassCacheWrite {
+	if req.CacheWriteBypassed {
 		return
 	}
 	return intraCache.put(obj)
