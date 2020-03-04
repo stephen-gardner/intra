@@ -41,12 +41,10 @@ type (
 		Collection []UserClose
 	}
 	UserCloseCUParams struct {
-		Close struct {
-			UserID   int    `json:"user_id,omitempty"`
-			CloserID int    `json:"closer_id,omitempty"`
-			Kind     string `json:"kind,omitempty"`
-			Reason   string `json:"reason,omitempty"`
-		} `json:"close,omitempty"`
+		UserID   int    `json:"user_id,omitempty"`
+		CloserID int    `json:"closer_id,omitempty"`
+		Kind     string `json:"kind,omitempty"`
+		Reason   string `json:"reason,omitempty"`
 	}
 )
 
@@ -61,7 +59,8 @@ const (
 func (uc *UserClose) Create(ctx context.Context, params UserCloseCUParams) ftapi.CachedRequest {
 	uc.req.Endpoint = ftapi.GetEndpoint("closes", nil)
 	uc.req.ExecuteMethod = func() {
-		uc.req.Create(ftapi.GetClient(ctx, "public", "tig"), uc, params)
+		data := ftapi.EncapsulatedMarshal("close", params)
+		uc.req.Create(ftapi.GetClient(ctx, "public", "tig"), uc, data)
 	}
 	return &uc.req
 }
@@ -77,7 +76,8 @@ func (uc *UserClose) Delete(ctx context.Context) ftapi.Request {
 func (uc *UserClose) Patch(ctx context.Context, params UserCloseCUParams) ftapi.Request {
 	uc.req.Endpoint = ftapi.GetEndpoint("closes/"+strconv.Itoa(uc.ID), nil)
 	uc.req.ExecuteMethod = func() {
-		uc.req.Patch(ftapi.GetClient(ctx, "public", "tig"), uc, params)
+		data := ftapi.EncapsulatedMarshal("close", params)
+		uc.req.Patch(ftapi.GetClient(ctx, "public", "tig"), uc, data)
 	}
 	return &uc.req
 }

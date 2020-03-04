@@ -71,24 +71,23 @@ type (
 		Collection []Exam
 	}
 	ExamCUParams struct {
-		Exam struct {
-			Name       string     `json:"name,omitempty"`
-			BeginAt    ftapi.Time `json:"begin_at,omitempty"`
-			EndAt      ftapi.Time `json:"end_at,omitempty"`
-			Location   string     `json:"location,omitempty"`
-			IPRange    string     `json:"ip_range,omitempty"`
-			Visible    bool       `json:"visible,omitempty"`
-			MaxPeople  int        `json:"max_people,omitempty"`
-			CampusID   int        `json:"campus_id,omitempty"`
-			ProjectIDs []int      `json:"project_ids,omitempty"`
-		} `json:"exam,omitempty"`
+		Name       string     `json:"name,omitempty"`
+		BeginAt    ftapi.Time `json:"begin_at,omitempty"`
+		EndAt      ftapi.Time `json:"end_at,omitempty"`
+		Location   string     `json:"location,omitempty"`
+		IPRange    string     `json:"ip_range,omitempty"`
+		Visible    bool       `json:"visible,omitempty"`
+		MaxPeople  int        `json:"max_people,omitempty"`
+		CampusID   int        `json:"campus_id,omitempty"`
+		ProjectIDs []int      `json:"project_ids,omitempty"`
 	}
 )
 
 func (exam *Exam) Create(ctx context.Context, params ExamCUParams) ftapi.CachedRequest {
 	exam.req.Endpoint = ftapi.GetEndpoint("exams", nil)
 	exam.req.ExecuteMethod = func() {
-		exam.req.Create(ftapi.GetClient(ctx, "public"), exam, params)
+		data := ftapi.EncapsulatedMarshal("exam", params)
+		exam.req.Create(ftapi.GetClient(ctx, "public"), exam, data)
 	}
 	return &exam.req
 }
@@ -104,7 +103,8 @@ func (exam *Exam) Delete(ctx context.Context) ftapi.Request {
 func (exam *Exam) Patch(ctx context.Context, params ExamCUParams) ftapi.Request {
 	exam.req.Endpoint = ftapi.GetEndpoint("exams/"+strconv.Itoa(exam.ID), nil)
 	exam.req.ExecuteMethod = func() {
-		exam.req.Patch(ftapi.GetClient(ctx, "public"), exam, params)
+		data := ftapi.EncapsulatedMarshal("exam", params)
+		exam.req.Patch(ftapi.GetClient(ctx, "public"), exam, data)
 	}
 	return &exam.req
 }

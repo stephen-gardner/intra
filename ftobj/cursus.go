@@ -19,11 +19,9 @@ type (
 		Collection []Cursus
 	}
 	CursusCUParams struct {
-		Cursus struct {
-			Name     string `json:"name,omitempty"`
-			Kind     string `json:"kind,omitempty"`
-			SkillIDs []int  `json:"skill_ids,omitempty"`
-		} `json:"cursus,omitempty"`
+		Name     string `json:"name,omitempty"`
+		Kind     string `json:"kind,omitempty"`
+		SkillIDs []int  `json:"skill_ids,omitempty"`
 	}
 )
 
@@ -36,7 +34,8 @@ const (
 func (exp *Cursus) Create(ctx context.Context, params CursusCUParams) ftapi.CachedRequest {
 	exp.req.Endpoint = ftapi.GetEndpoint("cursus", nil)
 	exp.req.ExecuteMethod = func() {
-		exp.req.Create(ftapi.GetClient(ctx, "public"), exp, params)
+		data := ftapi.EncapsulatedMarshal("cursus", params)
+		exp.req.Create(ftapi.GetClient(ctx, "public"), exp, data)
 	}
 	return &exp.req
 }
@@ -52,7 +51,8 @@ func (exp *Cursus) Delete(ctx context.Context) ftapi.Request {
 func (exp *Cursus) Patch(ctx context.Context, params CursusCUParams) ftapi.Request {
 	exp.req.Endpoint = ftapi.GetEndpoint("cursus/"+strconv.Itoa(exp.ID), nil)
 	exp.req.ExecuteMethod = func() {
-		exp.req.Patch(ftapi.GetClient(ctx, "public"), exp, params)
+		data := ftapi.EncapsulatedMarshal("cursus", params)
+		exp.req.Patch(ftapi.GetClient(ctx, "public"), exp, data)
 	}
 	return &exp.req
 }

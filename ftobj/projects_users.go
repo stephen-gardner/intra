@@ -62,24 +62,23 @@ type (
 		Collection []ProjectsUser
 	}
 	ProjectsUserCUParams struct {
-		ProjectsUser struct {
-			ProjectID           int        `json:"project_id,omitempty"`
-			UserID              int        `json:"user_id,omitempty"`
-			CreatedAt           ftapi.Time `json:"created_at,omitempty"`
-			UpdatedAt           ftapi.Time `json:"updated_at,omitempty"`
-			Occurrence          int        `json:"occurrence,omitempty"`
-			FinalMark           int        `json:"final_mark,omitempty"`
-			RetriableAt         ftapi.Time `json:"retriable_at,omitempty"`
-			MarkedAt            ftapi.Time `json:"marked_at,omitempty"`
-			SkipCheckPermission string     `json:"skip_check_permission,omitempty"`
-		} `json:"projects_user,omitempty"`
+		ProjectID           int        `json:"project_id,omitempty"`
+		UserID              int        `json:"user_id,omitempty"`
+		CreatedAt           ftapi.Time `json:"created_at,omitempty"`
+		UpdatedAt           ftapi.Time `json:"updated_at,omitempty"`
+		Occurrence          int        `json:"occurrence,omitempty"`
+		FinalMark           int        `json:"final_mark,omitempty"`
+		RetriableAt         ftapi.Time `json:"retriable_at,omitempty"`
+		MarkedAt            ftapi.Time `json:"marked_at,omitempty"`
+		SkipCheckPermission string     `json:"skip_check_permission,omitempty"`
 	}
 )
 
 func (pu *ProjectsUser) Create(ctx context.Context, params ProjectsUserCUParams) ftapi.CachedRequest {
 	pu.req.Endpoint = ftapi.GetEndpoint("projects_users", nil)
 	pu.req.ExecuteMethod = func() {
-		pu.req.Create(ftapi.GetClient(ctx, "public", "projects"), pu, params)
+		data := ftapi.EncapsulatedMarshal("projects_user", params)
+		pu.req.Create(ftapi.GetClient(ctx, "public", "projects"), pu, data)
 	}
 	return &pu.req
 }
@@ -95,7 +94,8 @@ func (pu *ProjectsUser) Delete(ctx context.Context) ftapi.Request {
 func (pu *ProjectsUser) Patch(ctx context.Context, params ProjectsUserCUParams) ftapi.Request {
 	pu.req.Endpoint = ftapi.GetEndpoint("projects_users/"+strconv.Itoa(pu.ID), nil)
 	pu.req.ExecuteMethod = func() {
-		pu.req.Patch(ftapi.GetClient(ctx, "public", "projects"), pu, params)
+		data := ftapi.EncapsulatedMarshal("projects_user", params)
+		pu.req.Patch(ftapi.GetClient(ctx, "public", "projects"), pu, data)
 	}
 	return &pu.req
 }

@@ -58,15 +58,13 @@ type (
 		Collection []Experience
 	}
 	ExperienceCUParams struct {
-		Experience struct {
-			UserID            int        `json:"user_id,omitempty"`
-			SkillID           int        `json:"skill_id,omitempty"`
-			ExperiancableID   int        `json:"experiancable_id,omitempty"`
-			ExperiancableType string     `json:"experiancable_type,omitempty"`
-			Experience        int        `json:"experience,omitempty"`
-			CreatedAt         ftapi.Time `json:"created_at,omitempty"`
-			CursusID          int        `json:"cursus_id,omitempty"`
-		} `json:"experience,omitempty"`
+		UserID            int        `json:"user_id,omitempty"`
+		SkillID           int        `json:"skill_id,omitempty"`
+		ExperiancableID   int        `json:"experiancable_id,omitempty"`
+		ExperiancableType string     `json:"experiancable_type,omitempty"`
+		Experience        int        `json:"experience,omitempty"`
+		CreatedAt         ftapi.Time `json:"created_at,omitempty"`
+		CursusID          int        `json:"cursus_id,omitempty"`
 	}
 )
 
@@ -99,7 +97,8 @@ var expLevels = []int{
 func (exp *Experience) Create(ctx context.Context, params ExperienceCUParams) ftapi.CachedRequest {
 	exp.req.Endpoint = ftapi.GetEndpoint("experiences", nil)
 	exp.req.ExecuteMethod = func() {
-		exp.req.Create(ftapi.GetClient(ctx, "public"), exp, params)
+		data := ftapi.EncapsulatedMarshal("experience", params)
+		exp.req.Create(ftapi.GetClient(ctx, "public"), exp, data)
 	}
 	return &exp.req
 }
@@ -115,7 +114,8 @@ func (exp *Experience) Delete(ctx context.Context) ftapi.Request {
 func (exp *Experience) Patch(ctx context.Context, params ExperienceCUParams) ftapi.Request {
 	exp.req.Endpoint = ftapi.GetEndpoint("experiences/"+strconv.Itoa(exp.ID), nil)
 	exp.req.ExecuteMethod = func() {
-		exp.req.Patch(ftapi.GetClient(ctx, "public"), exp, params)
+		data := ftapi.EncapsulatedMarshal("experience", params)
+		exp.req.Patch(ftapi.GetClient(ctx, "public"), exp, data)
 	}
 	return &exp.req
 }

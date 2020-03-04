@@ -42,12 +42,10 @@ type (
 		Collection []RolesEntity
 	}
 	RolesEntityCUParams struct {
-		RolesEntity struct {
-			RoleID     int        `json:"role_id,omitempty"`
-			EntityID   int        `json:"entity_id,omitempty"`
-			ExpiresAt  ftapi.Time `json:"expires_at,omitempty"`
-			EntityType string     `json:"entity_type,omitempty"`
-		} `json:"roles_entity,omitempty"`
+		RoleID     int        `json:"role_id,omitempty"`
+		EntityID   int        `json:"entity_id,omitempty"`
+		ExpiresAt  ftapi.Time `json:"expires_at,omitempty"`
+		EntityType string     `json:"entity_type,omitempty"`
 	}
 )
 
@@ -59,7 +57,8 @@ const (
 func (entity *RolesEntity) Create(ctx context.Context, params RolesEntityCUParams) ftapi.CachedRequest {
 	entity.req.Endpoint = ftapi.GetEndpoint("roles_entities", nil)
 	entity.req.ExecuteMethod = func() {
-		entity.req.Create(ftapi.GetClient(ctx, "public"), entity, params)
+		data := ftapi.EncapsulatedMarshal("roles_entity", params)
+		entity.req.Create(ftapi.GetClient(ctx, "public"), entity, data)
 	}
 	return &entity.req
 }
@@ -75,7 +74,8 @@ func (entity *RolesEntity) Delete(ctx context.Context) ftapi.Request {
 func (entity *RolesEntity) Patch(ctx context.Context, params RolesEntityCUParams) ftapi.Request {
 	entity.req.Endpoint = ftapi.GetEndpoint("roles_entities/"+strconv.Itoa(entity.ID), nil)
 	entity.req.ExecuteMethod = func() {
-		entity.req.Patch(ftapi.GetClient(ctx, "public"), entity, params)
+		data := ftapi.EncapsulatedMarshal("roles_entity", params)
+		entity.req.Patch(ftapi.GetClient(ctx, "public"), entity, data)
 	}
 	return &entity.req
 }

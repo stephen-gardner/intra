@@ -67,6 +67,12 @@ func SetRateLimit(requestsPerSecond int) {
 	rateLimit = time.NewTicker(time.Second / time.Duration(requestsPerSecond))
 }
 
+func EncapsulatedMarshal(container string, params interface{}) json.RawMessage {
+	encapsulated := map[string]interface{}{container: params}
+	data, _ := json.Marshal(encapsulated)
+	return data
+}
+
 func (req *RequestData) Make(client *http.Client, method string) (status int, body []byte) {
 	<-rateLimit.C
 	var requestBody io.Reader
@@ -92,10 +98,10 @@ func (req *RequestData) Make(client *http.Client, method string) (status int, bo
 	return
 }
 
-func (req *RequestData) Create(client *http.Client, objPtr, params interface{}) *RequestData {
+func (req *RequestData) Create(client *http.Client, objPtr interface{}, params json.RawMessage) *RequestData {
 	defer req.clean()
 	req.contentType = ContentTypeJson
-	req.body, _ = json.Marshal(params)
+	req.body = params
 	_, body := req.Make(client, http.MethodPost)
 	if req.Error == nil {
 		req.Error = json.Unmarshal(body, objPtr)
@@ -191,10 +197,10 @@ func (req *RequestData) GetAll(client *http.Client, objPtr interface{}) *Request
 
 // Objects will have to be manually mutated after patching, as the 42 Intra API uses a different format for patching
 // Thus CacheObject() should be called on these objects after mutation
-func (req *RequestData) Patch(client *http.Client, objPtr interface{}, params interface{}) *RequestData {
+func (req *RequestData) Patch(client *http.Client, objPtr interface{}, params json.RawMessage) *RequestData {
 	defer req.clean()
 	req.contentType = ContentTypeJson
-	req.body, _ = json.Marshal(params)
+	req.body = params
 	req.Make(client, http.MethodPatch)
 	return req
 }

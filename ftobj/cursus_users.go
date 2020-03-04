@@ -38,21 +38,20 @@ type (
 		Collection []CursusUser
 	}
 	CursusUserCUParams struct {
-		CursusUser struct {
-			CursusID            int        `json:"cursus_id,omitempty"`
-			UserID              int        `json:"user_id,omitempty"`
-			BeginAt             ftapi.Time `json:"begin_at,omitempty"`
-			EndAt               ftapi.Time `json:"end_at,omitempty"`
-			HasCoalition        bool       `json:"has_coalition,omitempty"`
-			SkipBeginValidation string     `json:"skip_begin_validation,omitempty"`
-		} `json:"cursus_user,omitempty"`
+		CursusID            int        `json:"cursus_id,omitempty"`
+		UserID              int        `json:"user_id,omitempty"`
+		BeginAt             ftapi.Time `json:"begin_at,omitempty"`
+		EndAt               ftapi.Time `json:"end_at,omitempty"`
+		HasCoalition        bool       `json:"has_coalition,omitempty"`
+		SkipBeginValidation string     `json:"skip_begin_validation,omitempty"`
 	}
 )
 
 func (cu *CursusUser) Create(ctx context.Context, params CursusUserCUParams) ftapi.CachedRequest {
 	cu.req.Endpoint = ftapi.GetEndpoint("cursus_users", nil)
 	cu.req.ExecuteMethod = func() {
-		cu.req.Create(ftapi.GetClient(ctx, "public"), cu, params)
+		data := ftapi.EncapsulatedMarshal("cursus_user", params)
+		cu.req.Create(ftapi.GetClient(ctx, "public"), cu, data)
 	}
 	return &cu.req
 }
@@ -68,7 +67,8 @@ func (cu *CursusUser) Delete(ctx context.Context) ftapi.Request {
 func (cu *CursusUser) Patch(ctx context.Context, params CursusUserCUParams) ftapi.Request {
 	cu.req.Endpoint = ftapi.GetEndpoint("cursus_users/"+strconv.Itoa(cu.ID), nil)
 	cu.req.ExecuteMethod = func() {
-		cu.req.Patch(ftapi.GetClient(ctx, "public"), cu, params)
+		data := ftapi.EncapsulatedMarshal("cursus_user", params)
+		cu.req.Patch(ftapi.GetClient(ctx, "public"), cu, data)
 	}
 	return &cu.req
 }

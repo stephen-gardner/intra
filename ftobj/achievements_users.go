@@ -22,18 +22,17 @@ type (
 		Collection []AchievementsUser
 	}
 	AchievementsUserCUParams struct {
-		AchievementsUser struct {
-			UserID        int `json:"user_id,omitempty"`
-			AchievementID int `json:"achievement_id,omitempty"`
-			NbrOfSuccess  int `json:"nbr_of_success,omitempty"`
-		} `json:"achievements_user,omitempty"`
+		UserID        int `json:"user_id,omitempty"`
+		AchievementID int `json:"achievement_id,omitempty"`
+		NbrOfSuccess  int `json:"nbr_of_success,omitempty"`
 	}
 )
 
 func (au *AchievementsUser) Create(ctx context.Context, params AchievementsUserCUParams) ftapi.CachedRequest {
 	au.req.Endpoint = ftapi.GetEndpoint("achievements_users", nil)
 	au.req.ExecuteMethod = func() {
-		au.req.Create(ftapi.GetClient(ctx, "public"), au, params)
+		data := ftapi.EncapsulatedMarshal("achievements_user", params)
+		au.req.Create(ftapi.GetClient(ctx, "public"), au, data)
 	}
 	return &au.req
 }
@@ -49,7 +48,8 @@ func (au *AchievementsUser) Delete(ctx context.Context) ftapi.Request {
 func (au *AchievementsUser) Patch(ctx context.Context, params AchievementsUserCUParams) ftapi.Request {
 	au.req.Endpoint = ftapi.GetEndpoint("achievements_users/"+strconv.Itoa(au.ID), nil)
 	au.req.ExecuteMethod = func() {
-		au.req.Patch(ftapi.GetClient(ctx, "public"), au, params)
+		data := ftapi.EncapsulatedMarshal("achievements_user", params)
+		au.req.Patch(ftapi.GetClient(ctx, "public"), au, data)
 	}
 	return &au.req
 }

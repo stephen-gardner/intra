@@ -67,31 +67,30 @@ type (
 		Collection []Team
 	}
 	TeamCUParams struct {
-		Team struct {
-			Name             string     `json:"name,omitempty"`
-			CreatedAt        ftapi.Time `json:"created_at,omitempty"`
-			UpdatedAt        ftapi.Time `json:"updated_at,omitempty"`
-			LockedAt         ftapi.Time `json:"locked_at,omitempty"`
-			ClosedAt         ftapi.Time `json:"closed_at,omitempty"`
-			FinalMark        int        `json:"final_mark,omitempty"`
-			RepoURL          string     `json:"repo_url,omitempty"`
-			RepoUUID         string     `json:"repo_uuid,omitempty"`
-			TerminatingAt    ftapi.Time `json:"terminating_at,omitempty"`
-			ProjectSessionID int        `json:"project_session_id,omitempty"`
-			UsersAttributes  struct {
-				UserID     int  `json:"user_id,omitempty"`
-				Leader     bool `json:"leader,omitempty"`
-				Validated  bool `json:"validated,omitempty"`
-				Occurrence int  `json:"occurrence,omitempty"`
-			} `json:"teams_users_attributes,omitempty"`
-		} `json:"team,omitempty"`
+		Name             string     `json:"name,omitempty"`
+		CreatedAt        ftapi.Time `json:"created_at,omitempty"`
+		UpdatedAt        ftapi.Time `json:"updated_at,omitempty"`
+		LockedAt         ftapi.Time `json:"locked_at,omitempty"`
+		ClosedAt         ftapi.Time `json:"closed_at,omitempty"`
+		FinalMark        int        `json:"final_mark,omitempty"`
+		RepoURL          string     `json:"repo_url,omitempty"`
+		RepoUUID         string     `json:"repo_uuid,omitempty"`
+		TerminatingAt    ftapi.Time `json:"terminating_at,omitempty"`
+		ProjectSessionID int        `json:"project_session_id,omitempty"`
+		UsersAttributes  struct {
+			UserID     int  `json:"user_id,omitempty"`
+			Leader     bool `json:"leader,omitempty"`
+			Validated  bool `json:"validated,omitempty"`
+			Occurrence int  `json:"occurrence,omitempty"`
+		} `json:"teams_users_attributes,omitempty"`
 	}
 )
 
 func (team *Team) Create(ctx context.Context, params TeamCUParams) ftapi.CachedRequest {
 	team.req.Endpoint = ftapi.GetEndpoint("teams", nil)
 	team.req.ExecuteMethod = func() {
-		team.req.Create(ftapi.GetClient(ctx, "public", "projects"), team, params)
+		data := ftapi.EncapsulatedMarshal("team", params)
+		team.req.Create(ftapi.GetClient(ctx, "public", "projects"), team, data)
 	}
 	return &team.req
 }
@@ -107,7 +106,8 @@ func (team *Team) Delete(ctx context.Context) ftapi.Request {
 func (team *Team) Patch(ctx context.Context, params TeamCUParams) ftapi.Request {
 	team.req.Endpoint = ftapi.GetEndpoint("teams/"+strconv.Itoa(team.ID), nil)
 	team.req.ExecuteMethod = func() {
-		team.req.Patch(ftapi.GetClient(ctx, "public", "projects"), team, params)
+		data := ftapi.EncapsulatedMarshal("team", params)
+		team.req.Patch(ftapi.GetClient(ctx, "public", "projects"), team, data)
 	}
 	return &team.req
 }

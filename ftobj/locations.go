@@ -26,21 +26,20 @@ type (
 		Collection []Location
 	}
 	LocationCUParams struct {
-		Location struct {
-			UserID   int        `json:"user_id,omitempty"`
-			BeginAt  ftapi.Time `json:"begin_at,omitempty"`
-			EndAt    ftapi.Time `json:"end_at,omitempty"`
-			Primary  bool       `json:"primary,omitempty"`
-			Host     string     `json:"host,omitempty"`
-			CampusID int        `json:"campus_id,omitempty"`
-		} `json:"location,omitempty"`
+		UserID   int        `json:"user_id,omitempty"`
+		BeginAt  ftapi.Time `json:"begin_at,omitempty"`
+		EndAt    ftapi.Time `json:"end_at,omitempty"`
+		Primary  bool       `json:"primary,omitempty"`
+		Host     string     `json:"host,omitempty"`
+		CampusID int        `json:"campus_id,omitempty"`
 	}
 )
 
 func (ps *Location) Create(ctx context.Context, params LocationCUParams) ftapi.CachedRequest {
 	ps.req.Endpoint = ftapi.GetEndpoint("locations", nil)
 	ps.req.ExecuteMethod = func() {
-		ps.req.Create(ftapi.GetClient(ctx, "public"), ps, params)
+		data := ftapi.EncapsulatedMarshal("location", params)
+		ps.req.Create(ftapi.GetClient(ctx, "public"), ps, data)
 	}
 	return &ps.req
 }
@@ -56,7 +55,8 @@ func (ps *Location) Delete(ctx context.Context) ftapi.Request {
 func (ps *Location) Patch(ctx context.Context, params LocationCUParams) ftapi.Request {
 	ps.req.Endpoint = ftapi.GetEndpoint("locations/"+strconv.Itoa(ps.ID), nil)
 	ps.req.ExecuteMethod = func() {
-		ps.req.Patch(ftapi.GetClient(ctx, "public"), ps, params)
+		data := ftapi.EncapsulatedMarshal("location", params)
+		ps.req.Patch(ftapi.GetClient(ctx, "public"), ps, data)
 	}
 	return &ps.req
 }

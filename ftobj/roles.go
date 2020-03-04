@@ -18,17 +18,16 @@ type (
 		Collection []Role
 	}
 	RoleCUParams struct {
-		Role struct {
-			Name        string `json:"name,omitempty"`
-			Description string `json:"description,omitempty"`
-		} `json:"role,omitempty"`
+		Name        string `json:"name,omitempty"`
+		Description string `json:"description,omitempty"`
 	}
 )
 
 func (role *Role) Create(ctx context.Context, params RoleCUParams) ftapi.CachedRequest {
 	role.req.Endpoint = ftapi.GetEndpoint("roles", nil)
 	role.req.ExecuteMethod = func() {
-		role.req.Create(ftapi.GetClient(ctx, "public"), role, params)
+		data := ftapi.EncapsulatedMarshal("role", params)
+		role.req.Create(ftapi.GetClient(ctx, "public"), role, data)
 	}
 	return &role.req
 }
@@ -44,7 +43,8 @@ func (role *Role) Delete(ctx context.Context) ftapi.Request {
 func (role *Role) Patch(ctx context.Context, params RoleCUParams) ftapi.Request {
 	role.req.Endpoint = ftapi.GetEndpoint("roles/"+strconv.Itoa(role.ID), nil)
 	role.req.ExecuteMethod = func() {
-		role.req.Patch(ftapi.GetClient(ctx, "public"), role, params)
+		data := ftapi.EncapsulatedMarshal("role", params)
+		role.req.Patch(ftapi.GetClient(ctx, "public"), role, data)
 	}
 	return &role.req
 }
