@@ -34,8 +34,7 @@ const (
 func (exp *Cursus) Create(ctx context.Context, params CursusCUParams) ftapi.CachedRequest {
 	exp.req.Endpoint = ftapi.GetEndpoint("cursus", nil)
 	exp.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("cursus", params)
-		exp.req.Create(ftapi.GetClient(ctx, "public"), exp, data)
+		exp.req.Create(ctx, exp, ftapi.EncapsulatedMarshal("cursus", params))
 	}
 	return &exp.req
 }
@@ -43,7 +42,7 @@ func (exp *Cursus) Create(ctx context.Context, params CursusCUParams) ftapi.Cach
 func (exp *Cursus) Delete(ctx context.Context) ftapi.Request {
 	exp.req.Endpoint = ftapi.GetEndpoint("cursus/"+strconv.Itoa(exp.ID), nil)
 	exp.req.ExecuteMethod = func() {
-		exp.req.Delete(ftapi.GetClient(ctx, "public"), exp)
+		exp.req.Delete(ctx, exp)
 	}
 	return &exp.req
 }
@@ -51,8 +50,7 @@ func (exp *Cursus) Delete(ctx context.Context) ftapi.Request {
 func (exp *Cursus) Patch(ctx context.Context, params CursusCUParams) ftapi.Request {
 	exp.req.Endpoint = ftapi.GetEndpoint("cursus/"+strconv.Itoa(exp.ID), nil)
 	exp.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("cursus", params)
-		exp.req.Patch(ftapi.GetClient(ctx, "public"), exp, data)
+		exp.req.Patch(ctx, ftapi.EncapsulatedMarshal("cursus", params))
 	}
 	return &exp.req
 }
@@ -60,7 +58,7 @@ func (exp *Cursus) Patch(ctx context.Context, params CursusCUParams) ftapi.Reque
 func (exp *Cursus) Get(ctx context.Context) ftapi.CachedRequest {
 	exp.req.Endpoint = ftapi.GetEndpoint("cursus/"+strconv.Itoa(exp.ID), nil)
 	exp.req.ExecuteMethod = func() {
-		exp.req.Get(ftapi.GetClient(ctx, "public"), exp)
+		exp.req.Get(ctx, exp)
 	}
 	return &exp.req
 }
@@ -68,7 +66,7 @@ func (exp *Cursus) Get(ctx context.Context) ftapi.CachedRequest {
 func (exps *Cursuses) GetAll(ctx context.Context) ftapi.CollectionRequest {
 	exps.req.Endpoint = ftapi.GetEndpoint("cursus", nil)
 	exps.req.ExecuteMethod = func() {
-		exps.req.GetAll(ftapi.GetClient(ctx, "public"), &exps.Collection)
+		exps.req.GetAll(ctx, &exps.Collection)
 	}
 	return &exps.req
 }

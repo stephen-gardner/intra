@@ -26,8 +26,7 @@ type (
 func (role *Role) Create(ctx context.Context, params RoleCUParams) ftapi.CachedRequest {
 	role.req.Endpoint = ftapi.GetEndpoint("roles", nil)
 	role.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("role", params)
-		role.req.Create(ftapi.GetClient(ctx, "public"), role, data)
+		role.req.Create(ctx, role, ftapi.EncapsulatedMarshal("role", params))
 	}
 	return &role.req
 }
@@ -35,7 +34,7 @@ func (role *Role) Create(ctx context.Context, params RoleCUParams) ftapi.CachedR
 func (role *Role) Delete(ctx context.Context) ftapi.Request {
 	role.req.Endpoint = ftapi.GetEndpoint("roles/"+strconv.Itoa(role.ID), nil)
 	role.req.ExecuteMethod = func() {
-		role.req.Delete(ftapi.GetClient(ctx, "public"), role)
+		role.req.Delete(ctx, role)
 	}
 	return &role.req
 }
@@ -43,8 +42,7 @@ func (role *Role) Delete(ctx context.Context) ftapi.Request {
 func (role *Role) Patch(ctx context.Context, params RoleCUParams) ftapi.Request {
 	role.req.Endpoint = ftapi.GetEndpoint("roles/"+strconv.Itoa(role.ID), nil)
 	role.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("role", params)
-		role.req.Patch(ftapi.GetClient(ctx, "public"), role, data)
+		role.req.Patch(ctx, ftapi.EncapsulatedMarshal("role", params))
 	}
 	return &role.req
 }
@@ -52,7 +50,7 @@ func (role *Role) Patch(ctx context.Context, params RoleCUParams) ftapi.Request 
 func (role *Role) Get(ctx context.Context) ftapi.CachedRequest {
 	role.req.Endpoint = ftapi.GetEndpoint("roles/"+strconv.Itoa(role.ID), nil)
 	role.req.ExecuteMethod = func() {
-		role.req.Get(ftapi.GetClient(ctx, "public"), role)
+		role.req.Get(ctx, role)
 	}
 	return &role.req
 }
@@ -60,7 +58,7 @@ func (role *Role) Get(ctx context.Context) ftapi.CachedRequest {
 func (roles *Roles) GetAll(ctx context.Context) ftapi.CollectionRequest {
 	roles.req.Endpoint = ftapi.GetEndpoint("roles", nil)
 	roles.req.ExecuteMethod = func() {
-		roles.req.GetAll(ftapi.GetClient(ctx, "public"), &roles.Collection)
+		roles.req.GetAll(ctx, &roles.Collection)
 	}
 	return &roles.req
 }

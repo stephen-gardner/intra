@@ -57,8 +57,7 @@ const (
 func (entity *RolesEntity) Create(ctx context.Context, params RolesEntityCUParams) ftapi.CachedRequest {
 	entity.req.Endpoint = ftapi.GetEndpoint("roles_entities", nil)
 	entity.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("roles_entity", params)
-		entity.req.Create(ftapi.GetClient(ctx, "public"), entity, data)
+		entity.req.Create(ctx, entity, ftapi.EncapsulatedMarshal("roles_entity", params))
 	}
 	return &entity.req
 }
@@ -66,7 +65,7 @@ func (entity *RolesEntity) Create(ctx context.Context, params RolesEntityCUParam
 func (entity *RolesEntity) Delete(ctx context.Context) ftapi.Request {
 	entity.req.Endpoint = ftapi.GetEndpoint("roles_entities/"+strconv.Itoa(entity.ID), nil)
 	entity.req.ExecuteMethod = func() {
-		entity.req.Delete(ftapi.GetClient(ctx, "public"), entity)
+		entity.req.Delete(ctx, entity)
 	}
 	return &entity.req
 }
@@ -74,8 +73,7 @@ func (entity *RolesEntity) Delete(ctx context.Context) ftapi.Request {
 func (entity *RolesEntity) Patch(ctx context.Context, params RolesEntityCUParams) ftapi.Request {
 	entity.req.Endpoint = ftapi.GetEndpoint("roles_entities/"+strconv.Itoa(entity.ID), nil)
 	entity.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("roles_entity", params)
-		entity.req.Patch(ftapi.GetClient(ctx, "public"), entity, data)
+		entity.req.Patch(ctx, ftapi.EncapsulatedMarshal("roles_entity", params))
 	}
 	return &entity.req
 }
@@ -83,7 +81,7 @@ func (entity *RolesEntity) Patch(ctx context.Context, params RolesEntityCUParams
 func (entity *RolesEntity) Get(ctx context.Context) ftapi.CachedRequest {
 	entity.req.Endpoint = ftapi.GetEndpoint("roles_entities/"+strconv.Itoa(entity.ID), nil)
 	entity.req.ExecuteMethod = func() {
-		entity.req.Get(ftapi.GetClient(ctx, "public"), entity)
+		entity.req.Get(ctx, entity)
 	}
 	return &entity.req
 }
@@ -91,7 +89,7 @@ func (entity *RolesEntity) Get(ctx context.Context) ftapi.CachedRequest {
 func (entities *RolesEntities) GetAll(ctx context.Context) ftapi.CollectionRequest {
 	entities.req.Endpoint = ftapi.GetEndpoint("roles_entities", nil)
 	entities.req.ExecuteMethod = func() {
-		entities.req.GetAll(ftapi.GetClient(ctx, "public"), &entities.Collection)
+		entities.req.GetAll(ctx, &entities.Collection)
 	}
 	return &entities.req
 }

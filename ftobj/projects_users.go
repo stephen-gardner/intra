@@ -77,8 +77,7 @@ type (
 func (pu *ProjectsUser) Create(ctx context.Context, params ProjectsUserCUParams) ftapi.CachedRequest {
 	pu.req.Endpoint = ftapi.GetEndpoint("projects_users", nil)
 	pu.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("projects_user", params)
-		pu.req.Create(ftapi.GetClient(ctx, "public", "projects"), pu, data)
+		pu.req.Create(ctx, pu, ftapi.EncapsulatedMarshal("projects_user", params))
 	}
 	return &pu.req
 }
@@ -86,7 +85,7 @@ func (pu *ProjectsUser) Create(ctx context.Context, params ProjectsUserCUParams)
 func (pu *ProjectsUser) Delete(ctx context.Context) ftapi.Request {
 	pu.req.Endpoint = ftapi.GetEndpoint("projects_users/"+strconv.Itoa(pu.ID), nil)
 	pu.req.ExecuteMethod = func() {
-		pu.req.Delete(ftapi.GetClient(ctx, "public", "projects"), pu)
+		pu.req.Delete(ctx, pu)
 	}
 	return &pu.req
 }
@@ -94,8 +93,7 @@ func (pu *ProjectsUser) Delete(ctx context.Context) ftapi.Request {
 func (pu *ProjectsUser) Patch(ctx context.Context, params ProjectsUserCUParams) ftapi.Request {
 	pu.req.Endpoint = ftapi.GetEndpoint("projects_users/"+strconv.Itoa(pu.ID), nil)
 	pu.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("projects_user", params)
-		pu.req.Patch(ftapi.GetClient(ctx, "public", "projects"), pu, data)
+		pu.req.Patch(ctx, ftapi.EncapsulatedMarshal("projects_user", params))
 	}
 	return &pu.req
 }
@@ -103,7 +101,7 @@ func (pu *ProjectsUser) Patch(ctx context.Context, params ProjectsUserCUParams) 
 func (pu *ProjectsUser) Get(ctx context.Context) ftapi.CachedRequest {
 	pu.req.Endpoint = ftapi.GetEndpoint("projects_users/"+strconv.Itoa(pu.ID), nil)
 	pu.req.ExecuteMethod = func() {
-		pu.req.Get(ftapi.GetClient(ctx, "public"), pu)
+		pu.req.Get(ctx, pu)
 	}
 	return &pu.req
 }
@@ -111,7 +109,7 @@ func (pu *ProjectsUser) Get(ctx context.Context) ftapi.CachedRequest {
 func (pus *ProjectsUsers) GetAll(ctx context.Context) ftapi.CollectionRequest {
 	pus.req.Endpoint = ftapi.GetEndpoint("projects_users", nil)
 	pus.req.ExecuteMethod = func() {
-		pus.req.GetAll(ftapi.GetClient(ctx, "public"), &pus.Collection)
+		pus.req.GetAll(ctx, &pus.Collection)
 	}
 	return &pus.req
 }
@@ -119,7 +117,7 @@ func (pus *ProjectsUsers) GetAll(ctx context.Context) ftapi.CollectionRequest {
 func (pu *ProjectsUser) Retry(ctx context.Context) ftapi.Request {
 	pu.req.Endpoint = ftapi.GetEndpoint(fmt.Sprintf("projects_users/%d/retry", pu.ID), nil)
 	pu.req.ExecuteMethod = func() {
-		pu.req.Patch(ftapi.GetClient(ctx, "public", "projects"), pu, nil)
+		pu.req.Patch(ctx, nil)
 	}
 	return &pu.req
 }

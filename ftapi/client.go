@@ -32,27 +32,40 @@ type RequestData struct {
 const (
 	ContentTypeForm = "application/x-www-form-urlencoded"
 	ContentTypeJson = "application/json"
+	ScopeELearning  = "elearning"
+	ScopeForum      = "forum"
+	ScopeProfile    = "profile"
+	ScopeProjects   = "projects"
+	ScopePublic     = "public"
+	ScopeTig        = "tig"
 )
 
 var (
-	clientID     = os.Getenv("INTRA_CLIENT_ID")
-	clientSecret = os.Getenv("INTRA_CLIENT_SECRET")
-	rateLimit    = time.NewTicker(time.Second / 2)
+	oauth     clientcredentials.Config
+	rateLimit = time.NewTicker(time.Second / 2)
+	ScopeAll  = []string{ScopeELearning, ScopeForum, ScopeProfile, ScopeProjects, ScopePublic, ScopeTig}
 )
 
-func GetClient(ctx context.Context, scopes ...string) *http.Client {
-	oauth := clientcredentials.Config{
-		ClientID:     clientID,
-		ClientSecret: clientSecret,
-		TokenURL:     "https://api.intra.42.fr/oauth/token",
-		Scopes:       scopes,
-	}
+func init() {
+	SetScope(ScopePublic)
+}
+
+func GetClient(ctx context.Context) *http.Client {
 	if ctx == nil {
 		ctx = context.Background()
 	}
 	client := oauth.Client(ctx)
 	client.Timeout = 2 * time.Minute
 	return client
+}
+
+func SetScope(scopes ...string) {
+	oauth = clientcredentials.Config{
+		ClientID:     os.Getenv("INTRA_CLIENT_ID"),
+		ClientSecret: os.Getenv("INTRA_CLIENT_SECRET"),
+		TokenURL:     "https://api.intra.42.fr/oauth/token",
+		Scopes:       scopes,
+	}
 }
 
 func GetEndpoint(path string, params url.Values) string {
@@ -81,7 +94,7 @@ func (req *RequestData) Clean() {
 	}
 }
 
-func (req *RequestData) Make(client *http.Client, method string) (status int, body []byte) {
+func (req *RequestData) Make(ctx context.Context, method string) (status int, body []byte) {
 	<-rateLimit.C
 	var requestBody io.Reader
 	switch req.ContentType {
@@ -94,7 +107,7 @@ func (req *RequestData) Make(client *http.Client, method string) (status int, bo
 	if finalReq, req.Error = http.NewRequest(method, req.Endpoint, requestBody); req.Error == nil {
 		finalReq.Header.Add("Content-Type", req.ContentType)
 		var resp *http.Response
-		if resp, req.Error = client.Do(finalReq); req.Error == nil {
+		if resp, req.Error = GetClient(ctx).Do(finalReq); req.Error == nil {
 			defer resp.Body.Close()
 			status = resp.StatusCode
 			body, req.Error = ioutil.ReadAll(resp.Body)
@@ -106,11 +119,11 @@ func (req *RequestData) Make(client *http.Client, method string) (status int, bo
 	return
 }
 
-func (req *RequestData) Create(client *http.Client, objPtr interface{}, params json.RawMessage) *RequestData {
+func (req *RequestData) Create(ctx context.Context, objPtr interface{}, params json.RawMessage) *RequestData {
 	defer req.Clean()
 	req.ContentType = ContentTypeJson
 	req.Body = params
-	_, body := req.Make(client, http.MethodPost)
+	_, body := req.Make(ctx, http.MethodPost)
 	if req.Error == nil {
 		req.Error = json.Unmarshal(body, objPtr)
 	}
@@ -120,10 +133,10 @@ func (req *RequestData) Create(client *http.Client, objPtr interface{}, params j
 	return req
 }
 
-func (req *RequestData) Delete(client *http.Client, objPtr interface{}) *RequestData {
+func (req *RequestData) Delete(ctx context.Context, objPtr interface{}) *RequestData {
 	defer req.Clean()
 	req.ContentType = ContentTypeForm
-	_, body := req.Make(client, http.MethodDelete)
+	_, body := req.Make(ctx, http.MethodDelete)
 	if req.Error != nil {
 		value := reflect.Indirect(reflect.ValueOf(objPtr))
 		ID := value.FieldByName("ID").Interface().(int)
@@ -136,13 +149,13 @@ func (req *RequestData) Delete(client *http.Client, objPtr interface{}) *Request
 	return req
 }
 
-func (req *RequestData) Get(client *http.Client, objPtr interface{}) *RequestData {
+func (req *RequestData) Get(ctx context.Context, objPtr interface{}) *RequestData {
 	defer req.Clean()
 	req.ContentType = ContentTypeForm
 	if req.cacheReadEnabled() && intraCache.get(objPtr) {
 		return req
 	}
-	_, body := req.Make(client, http.MethodGet)
+	_, body := req.Make(ctx, http.MethodGet)
 	if req.Error == nil {
 		req.Error = json.Unmarshal(body, objPtr)
 	}
@@ -156,7 +169,7 @@ func (req *RequestData) Get(client *http.Client, objPtr interface{}) *RequestDat
 	return req
 }
 
-func (req *RequestData) GetAll(client *http.Client, objPtr interface{}) *RequestData {
+func (req *RequestData) GetAll(ctx context.Context, objPtr interface{}) *RequestData {
 	defer req.Clean()
 	req.ContentType = ContentTypeForm
 	value := reflect.Indirect(reflect.ValueOf(objPtr))
@@ -170,7 +183,7 @@ func (req *RequestData) GetAll(client *http.Client, objPtr interface{}) *Request
 	data.WriteByte('[')
 	for {
 		req.Params.Set("page[number]", strconv.Itoa(pageNumber))
-		_, page := req.Make(client, http.MethodGet)
+		_, page := req.Make(ctx, http.MethodGet)
 		if req.Error != nil {
 			req.Error = fmt.Errorf("%s: %s: %s", value.Type().String(), req.Error, string(page))
 			return req
@@ -205,11 +218,11 @@ func (req *RequestData) GetAll(client *http.Client, objPtr interface{}) *Request
 
 // Objects will have to be manually mutated after patching, as the 42 Intra API uses a different format for patching
 // Thus CacheObject() should be called on these objects after mutation
-func (req *RequestData) Patch(client *http.Client, objPtr interface{}, params json.RawMessage) *RequestData {
+func (req *RequestData) Patch(ctx context.Context, params json.RawMessage) *RequestData {
 	defer req.Clean()
 	req.ContentType = ContentTypeJson
 	req.Body = params
-	req.Make(client, http.MethodPatch)
+	req.Make(ctx, http.MethodPatch)
 	return req
 }
 

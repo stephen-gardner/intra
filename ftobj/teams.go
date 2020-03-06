@@ -89,8 +89,7 @@ type (
 func (team *Team) Create(ctx context.Context, params TeamCUParams) ftapi.CachedRequest {
 	team.req.Endpoint = ftapi.GetEndpoint("teams", nil)
 	team.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("team", params)
-		team.req.Create(ftapi.GetClient(ctx, "public", "projects"), team, data)
+		team.req.Create(ctx, team, ftapi.EncapsulatedMarshal("team", params))
 	}
 	return &team.req
 }
@@ -98,7 +97,7 @@ func (team *Team) Create(ctx context.Context, params TeamCUParams) ftapi.CachedR
 func (team *Team) Delete(ctx context.Context) ftapi.Request {
 	team.req.Endpoint = ftapi.GetEndpoint("teams/"+strconv.Itoa(team.ID), nil)
 	team.req.ExecuteMethod = func() {
-		team.req.Delete(ftapi.GetClient(ctx, "public", "projects"), team)
+		team.req.Delete(ctx, team)
 	}
 	return &team.req
 }
@@ -106,8 +105,7 @@ func (team *Team) Delete(ctx context.Context) ftapi.Request {
 func (team *Team) Patch(ctx context.Context, params TeamCUParams) ftapi.Request {
 	team.req.Endpoint = ftapi.GetEndpoint("teams/"+strconv.Itoa(team.ID), nil)
 	team.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("team", params)
-		team.req.Patch(ftapi.GetClient(ctx, "public", "projects"), team, data)
+		team.req.Patch(ctx, ftapi.EncapsulatedMarshal("team", params))
 	}
 	return &team.req
 }
@@ -115,7 +113,7 @@ func (team *Team) Patch(ctx context.Context, params TeamCUParams) ftapi.Request 
 func (team *Team) Get(ctx context.Context) ftapi.CachedRequest {
 	team.req.Endpoint = ftapi.GetEndpoint("teams/"+strconv.Itoa(team.ID), nil)
 	team.req.ExecuteMethod = func() {
-		team.req.Get(ftapi.GetClient(ctx, "public"), team)
+		team.req.Get(ctx, team)
 	}
 	return &team.req
 }
@@ -123,7 +121,7 @@ func (team *Team) Get(ctx context.Context) ftapi.CachedRequest {
 func (teams *Teams) GetAll(ctx context.Context) ftapi.CollectionRequest {
 	teams.req.Endpoint = ftapi.GetEndpoint("teams", nil)
 	teams.req.ExecuteMethod = func() {
-		teams.req.GetAll(ftapi.GetClient(ctx, "public"), &teams.Collection)
+		teams.req.GetAll(ctx, &teams.Collection)
 	}
 	return &teams.req
 }

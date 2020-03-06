@@ -67,8 +67,7 @@ type (
 func (campus *Campus) Create(ctx context.Context, params CampusCUParams) ftapi.CachedRequest {
 	campus.req.Endpoint = ftapi.GetEndpoint("campus", nil)
 	campus.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("campus", params)
-		campus.req.Create(ftapi.GetClient(ctx, "public"), campus, data)
+		campus.req.Create(ctx, campus, ftapi.EncapsulatedMarshal("campus", params))
 	}
 	return &campus.req
 }
@@ -77,7 +76,7 @@ func (campus *Campus) Patch(ctx context.Context, params CampusCUParams) ftapi.Re
 	campus.req.Endpoint = ftapi.GetEndpoint("campus/"+strconv.Itoa(campus.ID), nil)
 	campus.req.ExecuteMethod = func() {
 		data := ftapi.EncapsulatedMarshal("campus", params)
-		campus.req.Patch(ftapi.GetClient(ctx, "public"), campus, data)
+		campus.req.Patch(ctx, data)
 	}
 	return &campus.req
 }
@@ -85,7 +84,7 @@ func (campus *Campus) Patch(ctx context.Context, params CampusCUParams) ftapi.Re
 func (campus *Campus) Get(ctx context.Context) ftapi.CachedRequest {
 	campus.req.Endpoint = ftapi.GetEndpoint("campus/"+strconv.Itoa(campus.ID), nil)
 	campus.req.ExecuteMethod = func() {
-		campus.req.Get(ftapi.GetClient(ctx, "public"), campus)
+		campus.req.Get(ctx, campus)
 	}
 	return &campus.req
 }
@@ -93,7 +92,7 @@ func (campus *Campus) Get(ctx context.Context) ftapi.CachedRequest {
 func (campuses *Campuses) GetAll(ctx context.Context) ftapi.CollectionRequest {
 	campuses.req.Endpoint = ftapi.GetEndpoint("campus", nil)
 	campuses.req.ExecuteMethod = func() {
-		campuses.req.GetAll(ftapi.GetClient(ctx, "public"), &campuses.Collection)
+		campuses.req.GetAll(ctx, &campuses.Collection)
 	}
 	return &campuses.req
 }

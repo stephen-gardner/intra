@@ -68,8 +68,7 @@ const (
 func (a *Achievement) Create(ctx context.Context, params AchievementCUParams) ftapi.CachedRequest {
 	a.req.Endpoint = ftapi.GetEndpoint("achievements", nil)
 	a.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("achievement", params)
-		a.req.Create(ftapi.GetClient(ctx, "public"), a, data)
+		a.req.Create(ctx, a, ftapi.EncapsulatedMarshal("achievement", params))
 	}
 	return &a.req
 }
@@ -77,7 +76,7 @@ func (a *Achievement) Create(ctx context.Context, params AchievementCUParams) ft
 func (a *Achievement) Delete(ctx context.Context) ftapi.Request {
 	a.req.Endpoint = ftapi.GetEndpoint("achievements/"+strconv.Itoa(a.ID), nil)
 	a.req.ExecuteMethod = func() {
-		a.req.Delete(ftapi.GetClient(ctx, "public"), a)
+		a.req.Delete(ctx, a)
 	}
 	return &a.req
 }
@@ -85,8 +84,7 @@ func (a *Achievement) Delete(ctx context.Context) ftapi.Request {
 func (a *Achievement) Patch(ctx context.Context, params AchievementCUParams) ftapi.Request {
 	a.req.Endpoint = ftapi.GetEndpoint("achievements/"+strconv.Itoa(a.ID), nil)
 	a.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("achievement", params)
-		a.req.Patch(ftapi.GetClient(ctx, "public"), a, data)
+		a.req.Patch(ctx, ftapi.EncapsulatedMarshal("achievement", params))
 	}
 	return &a.req
 }
@@ -94,7 +92,7 @@ func (a *Achievement) Patch(ctx context.Context, params AchievementCUParams) fta
 func (a *Achievement) Get(ctx context.Context) ftapi.CachedRequest {
 	a.req.Endpoint = ftapi.GetEndpoint("achievements/"+strconv.Itoa(a.ID), nil)
 	a.req.ExecuteMethod = func() {
-		a.req.Get(ftapi.GetClient(ctx, "public"), a)
+		a.req.Get(ctx, a)
 	}
 	return &a.req
 }
@@ -102,7 +100,7 @@ func (a *Achievement) Get(ctx context.Context) ftapi.CachedRequest {
 func (a *Achievements) GetAll(ctx context.Context) ftapi.CollectionRequest {
 	a.req.Endpoint = ftapi.GetEndpoint("achievements", nil)
 	a.req.ExecuteMethod = func() {
-		a.req.GetAll(ftapi.GetClient(ctx, "public"), &a.Collection)
+		a.req.GetAll(ctx, &a.Collection)
 	}
 	return &a.req
 }

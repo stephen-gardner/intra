@@ -50,8 +50,7 @@ type (
 func (cu *CursusUser) Create(ctx context.Context, params CursusUserCUParams) ftapi.CachedRequest {
 	cu.req.Endpoint = ftapi.GetEndpoint("cursus_users", nil)
 	cu.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("cursus_user", params)
-		cu.req.Create(ftapi.GetClient(ctx, "public"), cu, data)
+		cu.req.Create(ctx, cu, ftapi.EncapsulatedMarshal("cursus_user", params))
 	}
 	return &cu.req
 }
@@ -59,7 +58,7 @@ func (cu *CursusUser) Create(ctx context.Context, params CursusUserCUParams) fta
 func (cu *CursusUser) Delete(ctx context.Context) ftapi.Request {
 	cu.req.Endpoint = ftapi.GetEndpoint("cursus_users/"+strconv.Itoa(cu.ID), nil)
 	cu.req.ExecuteMethod = func() {
-		cu.req.Delete(ftapi.GetClient(ctx, "public"), cu)
+		cu.req.Delete(ctx, cu)
 	}
 	return &cu.req
 }
@@ -67,8 +66,7 @@ func (cu *CursusUser) Delete(ctx context.Context) ftapi.Request {
 func (cu *CursusUser) Patch(ctx context.Context, params CursusUserCUParams) ftapi.Request {
 	cu.req.Endpoint = ftapi.GetEndpoint("cursus_users/"+strconv.Itoa(cu.ID), nil)
 	cu.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("cursus_user", params)
-		cu.req.Patch(ftapi.GetClient(ctx, "public"), cu, data)
+		cu.req.Patch(ctx, ftapi.EncapsulatedMarshal("cursus_user", params))
 	}
 	return &cu.req
 }
@@ -76,7 +74,7 @@ func (cu *CursusUser) Patch(ctx context.Context, params CursusUserCUParams) ftap
 func (cu *CursusUser) Get(ctx context.Context) ftapi.CachedRequest {
 	cu.req.Endpoint = ftapi.GetEndpoint("cursus_users/"+strconv.Itoa(cu.ID), nil)
 	cu.req.ExecuteMethod = func() {
-		cu.req.Get(ftapi.GetClient(ctx, "public"), cu)
+		cu.req.Get(ctx, cu)
 	}
 	return &cu.req
 }
@@ -84,7 +82,7 @@ func (cu *CursusUser) Get(ctx context.Context) ftapi.CachedRequest {
 func (cus *CursusUsers) GetAll(ctx context.Context) ftapi.CollectionRequest {
 	cus.req.Endpoint = ftapi.GetEndpoint("cursus_users", nil)
 	cus.req.ExecuteMethod = func() {
-		cus.req.GetAll(ftapi.GetClient(ctx, "public"), &cus.Collection)
+		cus.req.GetAll(ctx, &cus.Collection)
 	}
 	return &cus.req
 }

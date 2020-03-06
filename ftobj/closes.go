@@ -59,8 +59,7 @@ const (
 func (uc *UserClose) Create(ctx context.Context, params UserCloseCUParams) ftapi.CachedRequest {
 	uc.req.Endpoint = ftapi.GetEndpoint("closes", nil)
 	uc.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("close", params)
-		uc.req.Create(ftapi.GetClient(ctx, "public", "tig"), uc, data)
+		uc.req.Create(ctx, uc, ftapi.EncapsulatedMarshal("close", params))
 	}
 	return &uc.req
 }
@@ -68,7 +67,7 @@ func (uc *UserClose) Create(ctx context.Context, params UserCloseCUParams) ftapi
 func (uc *UserClose) Delete(ctx context.Context) ftapi.Request {
 	uc.req.Endpoint = ftapi.GetEndpoint("closes/"+strconv.Itoa(uc.ID), nil)
 	uc.req.ExecuteMethod = func() {
-		uc.req.Delete(ftapi.GetClient(ctx, "public", "tig"), uc)
+		uc.req.Delete(ctx, uc)
 	}
 	return &uc.req
 }
@@ -76,8 +75,7 @@ func (uc *UserClose) Delete(ctx context.Context) ftapi.Request {
 func (uc *UserClose) Patch(ctx context.Context, params UserCloseCUParams) ftapi.Request {
 	uc.req.Endpoint = ftapi.GetEndpoint("closes/"+strconv.Itoa(uc.ID), nil)
 	uc.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("close", params)
-		uc.req.Patch(ftapi.GetClient(ctx, "public", "tig"), uc, data)
+		uc.req.Patch(ctx, ftapi.EncapsulatedMarshal("close", params))
 	}
 	return &uc.req
 }
@@ -85,7 +83,7 @@ func (uc *UserClose) Patch(ctx context.Context, params UserCloseCUParams) ftapi.
 func (uc *UserClose) Get(ctx context.Context) ftapi.CachedRequest {
 	uc.req.Endpoint = ftapi.GetEndpoint("closes/"+strconv.Itoa(uc.ID), nil)
 	uc.req.ExecuteMethod = func() {
-		uc.req.Get(ftapi.GetClient(ctx, "public", "tig"), uc)
+		uc.req.Get(ctx, uc)
 	}
 	return &uc.req
 }
@@ -93,7 +91,7 @@ func (uc *UserClose) Get(ctx context.Context) ftapi.CachedRequest {
 func (ucs *UserCloses) GetAll(ctx context.Context) ftapi.CollectionRequest {
 	ucs.req.Endpoint = ftapi.GetEndpoint("closes", nil)
 	ucs.req.ExecuteMethod = func() {
-		ucs.req.GetAll(ftapi.GetClient(ctx, "public", "tig"), &ucs.Collection)
+		ucs.req.GetAll(ctx, &ucs.Collection)
 	}
 	return &ucs.req
 }
@@ -101,7 +99,7 @@ func (ucs *UserCloses) GetAll(ctx context.Context) ftapi.CollectionRequest {
 func (uc *UserClose) Reclose(ctx context.Context) ftapi.CachedRequest {
 	uc.req.Endpoint = ftapi.GetEndpoint(fmt.Sprintf("closes/%d/close", uc.ID), nil)
 	uc.req.ExecuteMethod = func() {
-		err := uc.req.Patch(ftapi.GetClient(ctx, "public", "tig"), uc, nil).Error
+		err := uc.req.Patch(ctx, nil).Error
 		if err != nil {
 			return
 		}
@@ -114,7 +112,7 @@ func (uc *UserClose) Reclose(ctx context.Context) ftapi.CachedRequest {
 func (uc *UserClose) Unclose(ctx context.Context) ftapi.CachedRequest {
 	uc.req.Endpoint = ftapi.GetEndpoint(fmt.Sprintf("closes/%d/unclose", uc.ID), nil)
 	uc.req.ExecuteMethod = func() {
-		err := uc.req.Patch(ftapi.GetClient(ctx, "public", "tig"), uc, nil).Error
+		err := uc.req.Patch(ctx, nil).Error
 		if err != nil {
 			return
 		}

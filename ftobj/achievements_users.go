@@ -31,8 +31,7 @@ type (
 func (au *AchievementsUser) Create(ctx context.Context, params AchievementsUserCUParams) ftapi.CachedRequest {
 	au.req.Endpoint = ftapi.GetEndpoint("achievements_users", nil)
 	au.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("achievements_user", params)
-		au.req.Create(ftapi.GetClient(ctx, "public"), au, data)
+		au.req.Create(ctx, au, ftapi.EncapsulatedMarshal("achievements_user", params))
 	}
 	return &au.req
 }
@@ -40,7 +39,7 @@ func (au *AchievementsUser) Create(ctx context.Context, params AchievementsUserC
 func (au *AchievementsUser) Delete(ctx context.Context) ftapi.Request {
 	au.req.Endpoint = ftapi.GetEndpoint("achievements_users/"+strconv.Itoa(au.ID), nil)
 	au.req.ExecuteMethod = func() {
-		au.req.Delete(ftapi.GetClient(ctx, "public"), au)
+		au.req.Delete(ctx, au)
 	}
 	return &au.req
 }
@@ -48,8 +47,7 @@ func (au *AchievementsUser) Delete(ctx context.Context) ftapi.Request {
 func (au *AchievementsUser) Patch(ctx context.Context, params AchievementsUserCUParams) ftapi.Request {
 	au.req.Endpoint = ftapi.GetEndpoint("achievements_users/"+strconv.Itoa(au.ID), nil)
 	au.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("achievements_user", params)
-		au.req.Patch(ftapi.GetClient(ctx, "public"), au, data)
+		au.req.Patch(ctx, ftapi.EncapsulatedMarshal("achievements_user", params))
 	}
 	return &au.req
 }
@@ -57,7 +55,7 @@ func (au *AchievementsUser) Patch(ctx context.Context, params AchievementsUserCU
 func (au *AchievementsUser) Get(ctx context.Context) ftapi.CachedRequest {
 	au.req.Endpoint = ftapi.GetEndpoint("achievements_users/"+strconv.Itoa(au.ID), nil)
 	au.req.ExecuteMethod = func() {
-		au.req.Get(ftapi.GetClient(ctx, "public"), au)
+		au.req.Get(ctx, au)
 	}
 	return &au.req
 }
@@ -65,7 +63,7 @@ func (au *AchievementsUser) Get(ctx context.Context) ftapi.CachedRequest {
 func (aus *AchievementsUsers) GetAll(ctx context.Context) ftapi.CollectionRequest {
 	aus.req.Endpoint = ftapi.GetEndpoint("achievements_users", nil)
 	aus.req.ExecuteMethod = func() {
-		aus.req.GetAll(ftapi.GetClient(ctx, "public"), &aus.Collection)
+		aus.req.GetAll(ctx, &aus.Collection)
 	}
 	return &aus.req
 }

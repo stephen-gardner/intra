@@ -97,8 +97,7 @@ var expLevels = []int{
 func (exp *Experience) Create(ctx context.Context, params ExperienceCUParams) ftapi.CachedRequest {
 	exp.req.Endpoint = ftapi.GetEndpoint("experiences", nil)
 	exp.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("experience", params)
-		exp.req.Create(ftapi.GetClient(ctx, "public"), exp, data)
+		exp.req.Create(ctx, exp, ftapi.EncapsulatedMarshal("experience", params))
 	}
 	return &exp.req
 }
@@ -106,7 +105,7 @@ func (exp *Experience) Create(ctx context.Context, params ExperienceCUParams) ft
 func (exp *Experience) Delete(ctx context.Context) ftapi.Request {
 	exp.req.Endpoint = ftapi.GetEndpoint("experiences/"+strconv.Itoa(exp.ID), nil)
 	exp.req.ExecuteMethod = func() {
-		exp.req.Delete(ftapi.GetClient(ctx, "public"), exp)
+		exp.req.Delete(ctx, exp)
 	}
 	return &exp.req
 }
@@ -114,8 +113,7 @@ func (exp *Experience) Delete(ctx context.Context) ftapi.Request {
 func (exp *Experience) Patch(ctx context.Context, params ExperienceCUParams) ftapi.Request {
 	exp.req.Endpoint = ftapi.GetEndpoint("experiences/"+strconv.Itoa(exp.ID), nil)
 	exp.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("experience", params)
-		exp.req.Patch(ftapi.GetClient(ctx, "public"), exp, data)
+		exp.req.Patch(ctx, ftapi.EncapsulatedMarshal("experience", params))
 	}
 	return &exp.req
 }
@@ -123,7 +121,7 @@ func (exp *Experience) Patch(ctx context.Context, params ExperienceCUParams) fta
 func (exp *Experience) Get(ctx context.Context) ftapi.CachedRequest {
 	exp.req.Endpoint = ftapi.GetEndpoint("experiences/"+strconv.Itoa(exp.ID), nil)
 	exp.req.ExecuteMethod = func() {
-		exp.req.Get(ftapi.GetClient(ctx, "public"), exp)
+		exp.req.Get(ctx, exp)
 	}
 	return &exp.req
 }
@@ -131,7 +129,7 @@ func (exp *Experience) Get(ctx context.Context) ftapi.CachedRequest {
 func (exps *Experiences) GetAll(ctx context.Context) ftapi.CollectionRequest {
 	exps.req.Endpoint = ftapi.GetEndpoint("experiences", nil)
 	exps.req.ExecuteMethod = func() {
-		exps.req.GetAll(ftapi.GetClient(ctx, "public"), &exps.Collection)
+		exps.req.GetAll(ctx, &exps.Collection)
 	}
 	return &exps.req
 }

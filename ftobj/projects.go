@@ -96,7 +96,7 @@ type (
 func (proj *Project) Get(ctx context.Context) ftapi.CachedRequest {
 	proj.req.Endpoint = ftapi.GetEndpoint("projects/"+strconv.Itoa(proj.ID), nil)
 	proj.req.ExecuteMethod = func() {
-		proj.req.Get(ftapi.GetClient(ctx, "public"), proj)
+		proj.req.Get(ctx, proj)
 	}
 	return &proj.req
 }
@@ -104,7 +104,7 @@ func (proj *Project) Get(ctx context.Context) ftapi.CachedRequest {
 func (projs *Projects) GetAll(ctx context.Context) ftapi.CollectionRequest {
 	projs.req.Endpoint = ftapi.GetEndpoint("projects", nil)
 	projs.req.ExecuteMethod = func() {
-		projs.req.GetAll(ftapi.GetClient(ctx, "public"), &projs.Collection)
+		projs.req.GetAll(ctx, &projs.Collection)
 	}
 	return &projs.req
 }

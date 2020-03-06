@@ -38,8 +38,7 @@ type (
 func (ps *Location) Create(ctx context.Context, params LocationCUParams) ftapi.CachedRequest {
 	ps.req.Endpoint = ftapi.GetEndpoint("locations", nil)
 	ps.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("location", params)
-		ps.req.Create(ftapi.GetClient(ctx, "public"), ps, data)
+		ps.req.Create(ctx, ps, ftapi.EncapsulatedMarshal("location", params))
 	}
 	return &ps.req
 }
@@ -47,7 +46,7 @@ func (ps *Location) Create(ctx context.Context, params LocationCUParams) ftapi.C
 func (ps *Location) Delete(ctx context.Context) ftapi.Request {
 	ps.req.Endpoint = ftapi.GetEndpoint("locations/"+strconv.Itoa(ps.ID), nil)
 	ps.req.ExecuteMethod = func() {
-		ps.req.Delete(ftapi.GetClient(ctx, "public"), ps)
+		ps.req.Delete(ctx, ps)
 	}
 	return &ps.req
 }
@@ -55,8 +54,7 @@ func (ps *Location) Delete(ctx context.Context) ftapi.Request {
 func (ps *Location) Patch(ctx context.Context, params LocationCUParams) ftapi.Request {
 	ps.req.Endpoint = ftapi.GetEndpoint("locations/"+strconv.Itoa(ps.ID), nil)
 	ps.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("location", params)
-		ps.req.Patch(ftapi.GetClient(ctx, "public"), ps, data)
+		ps.req.Patch(ctx, ftapi.EncapsulatedMarshal("location", params))
 	}
 	return &ps.req
 }
@@ -64,7 +62,7 @@ func (ps *Location) Patch(ctx context.Context, params LocationCUParams) ftapi.Re
 func (ps *Location) Get(ctx context.Context) ftapi.CachedRequest {
 	ps.req.Endpoint = ftapi.GetEndpoint("locations/"+strconv.Itoa(ps.ID), nil)
 	ps.req.ExecuteMethod = func() {
-		ps.req.Get(ftapi.GetClient(ctx, "public"), ps)
+		ps.req.Get(ctx, ps)
 	}
 	return &ps.req
 }
@@ -72,7 +70,7 @@ func (ps *Location) Get(ctx context.Context) ftapi.CachedRequest {
 func (locs *Locations) GetAll(ctx context.Context) ftapi.CollectionRequest {
 	locs.req.Endpoint = ftapi.GetEndpoint("locations", nil)
 	locs.req.ExecuteMethod = func() {
-		locs.req.GetAll(ftapi.GetClient(ctx, "public"), &locs.Collection)
+		locs.req.GetAll(ctx, &locs.Collection)
 	}
 	return &locs.req
 }

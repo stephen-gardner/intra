@@ -86,8 +86,7 @@ type (
 func (exam *Exam) Create(ctx context.Context, params ExamCUParams) ftapi.CachedRequest {
 	exam.req.Endpoint = ftapi.GetEndpoint("exams", nil)
 	exam.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("exam", params)
-		exam.req.Create(ftapi.GetClient(ctx, "public"), exam, data)
+		exam.req.Create(ctx, exam, ftapi.EncapsulatedMarshal("exam", params))
 	}
 	return &exam.req
 }
@@ -95,7 +94,7 @@ func (exam *Exam) Create(ctx context.Context, params ExamCUParams) ftapi.CachedR
 func (exam *Exam) Delete(ctx context.Context) ftapi.Request {
 	exam.req.Endpoint = ftapi.GetEndpoint("exams/"+strconv.Itoa(exam.ID), nil)
 	exam.req.ExecuteMethod = func() {
-		exam.req.Delete(ftapi.GetClient(ctx, "public"), exam)
+		exam.req.Delete(ctx, exam)
 	}
 	return &exam.req
 }
@@ -103,8 +102,7 @@ func (exam *Exam) Delete(ctx context.Context) ftapi.Request {
 func (exam *Exam) Patch(ctx context.Context, params ExamCUParams) ftapi.Request {
 	exam.req.Endpoint = ftapi.GetEndpoint("exams/"+strconv.Itoa(exam.ID), nil)
 	exam.req.ExecuteMethod = func() {
-		data := ftapi.EncapsulatedMarshal("exam", params)
-		exam.req.Patch(ftapi.GetClient(ctx, "public"), exam, data)
+		exam.req.Patch(ctx, ftapi.EncapsulatedMarshal("exam", params))
 	}
 	return &exam.req
 }
@@ -112,7 +110,7 @@ func (exam *Exam) Patch(ctx context.Context, params ExamCUParams) ftapi.Request 
 func (exam *Exam) Get(ctx context.Context) ftapi.CachedRequest {
 	exam.req.Endpoint = ftapi.GetEndpoint("exams/"+strconv.Itoa(exam.ID), nil)
 	exam.req.ExecuteMethod = func() {
-		exam.req.Get(ftapi.GetClient(ctx, "public"), exam)
+		exam.req.Get(ctx, exam)
 	}
 	return &exam.req
 }
@@ -120,7 +118,7 @@ func (exam *Exam) Get(ctx context.Context) ftapi.CachedRequest {
 func (exams *Exams) GetAll(ctx context.Context) ftapi.CollectionRequest {
 	exams.req.Endpoint = ftapi.GetEndpoint("exams", nil)
 	exams.req.ExecuteMethod = func() {
-		exams.req.GetAll(ftapi.GetClient(ctx, "public"), &exams.Collection)
+		exams.req.GetAll(ctx, &exams.Collection)
 	}
 	return &exams.req
 }
