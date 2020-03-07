@@ -8,31 +8,21 @@ import (
 
 type (
 	Campus struct {
-		req      ftapi.RequestData
-		ID       int    `json:"id"`
-		Name     string `json:"name"`
-		TimeZone string `json:"time_zone"`
-		Language struct {
-			ID         int    `json:"id"`
-			Name       string `json:"name"`
-			Identifier string `json:"identifier"`
-		} `json:"language"`
-		UsersCount  int    `json:"users_count"`
-		VogsphereID int    `json:"vogsphere_id"`
-		Country     string `json:"country"`
-		Address     string `json:"address"`
-		Zip         string `json:"zip"`
-		City        string `json:"city"`
-		Website     string `json:"website"`
-		Facebook    string `json:"facebook"`
-		Twitter     string `json:"twitter"`
-		Endpoint    struct {
-			ID          int        `json:"id"`
-			URL         string     `json:"url"`
-			Description string     `json:"description"`
-			CreatedAt   ftapi.Time `json:"created_at"`
-			UpdatedAt   ftapi.Time `json:"updated_at"`
-		} `json:"endpoint"`
+		req         ftapi.RequestData
+		ID          int      `json:"id"`
+		Name        string   `json:"name"`
+		TimeZone    string   `json:"time_zone"`
+		Language    Language `json:"language"`
+		UsersCount  int      `json:"users_count"`
+		VogsphereID int      `json:"vogsphere_id"`
+		Country     string   `json:"country"`
+		Address     string   `json:"address"`
+		Zip         string   `json:"zip"`
+		City        string   `json:"city"`
+		Website     string   `json:"website"`
+		Facebook    string   `json:"facebook"`
+		Twitter     string   `json:"twitter"`
+		Endpoint    Endpoint `json:"endpoint"`
 	}
 	Campuses struct {
 		req        ftapi.RequestData
