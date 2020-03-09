@@ -9,10 +9,10 @@ import (
 type (
 	TitlesUser struct {
 		req      ftapi.RequestData
-		ID       int  `json:"id"`
-		UserID   int  `json:"user_id"`
-		TitleID  int  `json:"title_id"`
-		Selected bool `json:"selected"`
+		ID       int  `json:"id,omitempty"`
+		UserID   int  `json:"user_id,omitempty"`
+		TitleID  int  `json:"title_id,omitempty"`
+		Selected bool `json:"selected,omitempty"`
 	}
 	TitlesUsers struct {
 		req        ftapi.RequestData

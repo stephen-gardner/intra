@@ -9,29 +9,29 @@ import (
 type (
 	CursusUser struct {
 		req          ftapi.RequestData
-		ID           int        `json:"id"`
-		CursusID     int        `json:"cursus_id"`
-		BeginAt      ftapi.Time `json:"begin_at"`
-		EndAt        ftapi.Time `json:"end_at"`
-		Grade        string     `json:"grade"`
-		Level        float64    `json:"level"`
-		HasCoalition bool       `json:"has_coalition"`
+		ID           int        `json:"id,omitempty"`
+		CursusID     int        `json:"cursus_id,omitempty"`
+		BeginAt      ftapi.Time `json:"begin_at,omitempty"`
+		EndAt        ftapi.Time `json:"end_at,omitempty"`
+		Grade        string     `json:"grade,omitempty"`
+		Level        float64    `json:"level,omitempty"`
+		HasCoalition bool       `json:"has_coalition,omitempty"`
 		Skills       []struct {
-			ID    int     `json:"id"`
-			Name  string  `json:"name"`
-			Level float64 `json:"level"`
-		} `json:"skills"`
+			ID    int     `json:"id,omitempty"`
+			Name  string  `json:"name,omitempty"`
+			Level float64 `json:"level,omitempty"`
+		} `json:"skills,omitempty"`
 		User struct {
-			ID    int    `json:"id"`
-			Login string `json:"login"`
-			URL   string `json:"url"`
-		} `json:"user"`
+			ID    int    `json:"id,omitempty"`
+			Login string `json:"login,omitempty"`
+			URL   string `json:"url,omitempty"`
+		} `json:"user,omitempty"`
 		Cursus struct {
-			ID        int        `json:"id"`
-			CreatedAt ftapi.Time `json:"created_at"`
-			Name      string     `json:"name"`
-			Slug      string     `json:"slug"`
-		} `json:"cursus"`
+			ID        int        `json:"id,omitempty"`
+			CreatedAt ftapi.Time `json:"created_at,omitempty"`
+			Name      string     `json:"name,omitempty"`
+			Slug      string     `json:"slug,omitempty"`
+		} `json:"cursus,omitempty"`
 	}
 	CursusUsers struct {
 		req        ftapi.RequestData

@@ -9,17 +9,17 @@ import (
 type (
 	Location struct {
 		req      ftapi.RequestData
-		ID       int        `json:"id"`
-		BeginAt  ftapi.Time `json:"begin_at"`
-		EndAt    ftapi.Time `json:"end_at"`
-		Host     string     `json:"host"`
-		CampusID int        `json:"campus_id"`
-		Primary  bool       `json:"primary"`
+		ID       int        `json:"id,omitempty"`
+		BeginAt  ftapi.Time `json:"begin_at,omitempty"`
+		EndAt    ftapi.Time `json:"end_at,omitempty"`
+		Host     string     `json:"host,omitempty"`
+		CampusID int        `json:"campus_id,omitempty"`
+		Primary  bool       `json:"primary,omitempty"`
 		User     struct {
-			ID    int    `json:"id"`
-			Login string `json:"login"`
-			URL   string `json:"url"`
-		} `json:"user"`
+			ID    int    `json:"id,omitempty"`
+			Login string `json:"login,omitempty"`
+			URL   string `json:"url,omitempty"`
+		} `json:"user,omitempty"`
 	}
 	Locations struct {
 		req        ftapi.RequestData

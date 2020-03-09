@@ -9,62 +9,62 @@ import (
 type (
 	Exam struct {
 		req            ftapi.RequestData
-		ID             int        `json:"id"`
-		IPRange        string     `json:"ip_range"`
-		BeginAt        ftapi.Time `json:"begin_at"`
-		EndAt          ftapi.Time `json:"end_at"`
-		Location       string     `json:"location"`
-		MaxPeople      int        `json:"max_people"`
-		NbrSubscribers int        `json:"nbr_subscribers"`
-		Name           string     `json:"name"`
+		ID             int        `json:"id,omitempty"`
+		IPRange        string     `json:"ip_range,omitempty"`
+		BeginAt        ftapi.Time `json:"begin_at,omitempty"`
+		EndAt          ftapi.Time `json:"end_at,omitempty"`
+		Location       string     `json:"location,omitempty"`
+		MaxPeople      int        `json:"max_people,omitempty"`
+		NbrSubscribers int        `json:"nbr_subscribers,omitempty"`
+		Name           string     `json:"name,omitempty"`
 		Campus         struct {
-			ID       int    `json:"id"`
-			Name     string `json:"name"`
-			TimeZone string `json:"time_zone"`
+			ID       int    `json:"id,omitempty"`
+			Name     string `json:"name,omitempty"`
+			TimeZone string `json:"time_zone,omitempty"`
 			Language struct {
-				ID         int        `json:"id"`
-				Name       string     `json:"name"`
-				Identifier string     `json:"identifier"`
-				CreatedAt  ftapi.Time `json:"created_at"`
-				UpdatedAt  ftapi.Time `json:"updated_at"`
-			} `json:"language"`
-			UsersCount  int    `json:"users_count"`
-			VogsphereID int    `json:"vogsphere_id"`
-			Country     string `json:"country"`
-			Address     string `json:"address"`
-			Zip         string `json:"zip"`
-			City        string `json:"city"`
-			Website     string `json:"website"`
-			Facebook    string `json:"facebook"`
-			Twitter     string `json:"twitter"`
-		} `json:"campus"`
+				ID         int        `json:"id,omitempty"`
+				Name       string     `json:"name,omitempty"`
+				Identifier string     `json:"identifier,omitempty"`
+				CreatedAt  ftapi.Time `json:"created_at,omitempty"`
+				UpdatedAt  ftapi.Time `json:"updated_at,omitempty"`
+			} `json:"language,omitempty"`
+			UsersCount  int    `json:"users_count,omitempty"`
+			VogsphereID int    `json:"vogsphere_id,omitempty"`
+			Country     string `json:"country,omitempty"`
+			Address     string `json:"address,omitempty"`
+			Zip         string `json:"zip,omitempty"`
+			City        string `json:"city,omitempty"`
+			Website     string `json:"website,omitempty"`
+			Facebook    string `json:"facebook,omitempty"`
+			Twitter     string `json:"twitter,omitempty"`
+		} `json:"campus,omitempty"`
 		Cursus []struct {
-			ID        int        `json:"id"`
-			CreatedAt ftapi.Time `json:"created_at"`
-			Name      string     `json:"name"`
-			Slug      string     `json:"slug"`
-		} `json:"cursus"`
+			ID        int        `json:"id,omitempty"`
+			CreatedAt ftapi.Time `json:"created_at,omitempty"`
+			Name      string     `json:"name,omitempty"`
+			Slug      string     `json:"slug,omitempty"`
+		} `json:"cursus,omitempty"`
 		Projects []struct {
-			ID     int    `json:"id"`
-			Name   string `json:"name"`
-			Slug   string `json:"slug"`
+			ID     int    `json:"id,omitempty"`
+			Name   string `json:"name,omitempty"`
+			Slug   string `json:"slug,omitempty"`
 			Parent struct {
-				Name string `json:"name"`
-				ID   int    `json:"id"`
-				Slug string `json:"slug"`
-				URL  string `json:"url"`
-			} `json:"parent"`
+				Name string `json:"name,omitempty"`
+				ID   int    `json:"id,omitempty"`
+				Slug string `json:"slug,omitempty"`
+				URL  string `json:"url,omitempty"`
+			} `json:"parent,omitempty"`
 			Children []struct {
-				Name string `json:"name"`
-				ID   int    `json:"id"`
-				Slug string `json:"slug"`
-				URL  string `json:"url"`
-			} `json:"children"`
-			Objectives []string   `json:"objectives"`
-			CreatedAt  ftapi.Time `json:"created_at"`
-			UpdatedAt  ftapi.Time `json:"updated_at"`
-			Exam       bool       `json:"exam"`
-		} `json:"projects"`
+				Name string `json:"name,omitempty"`
+				ID   int    `json:"id,omitempty"`
+				Slug string `json:"slug,omitempty"`
+				URL  string `json:"url,omitempty"`
+			} `json:"children,omitempty"`
+			Objectives []string   `json:"objectives,omitempty"`
+			CreatedAt  ftapi.Time `json:"created_at,omitempty"`
+			UpdatedAt  ftapi.Time `json:"updated_at,omitempty"`
+			Exam       bool       `json:"exam,omitempty"`
+		} `json:"projects,omitempty"`
 	}
 	Exams struct {
 		req        ftapi.RequestData

@@ -9,11 +9,11 @@ import (
 type (
 	LanguagesUser struct {
 		req        ftapi.RequestData
-		ID         int        `json:"id"`
-		LanguageID int        `json:"language_id"`
-		UserID     int        `json:"user_id"`
-		Position   int        `json:"position"`
-		CreatedAt  ftapi.Time `json:"created_at"`
+		ID         int        `json:"id,omitempty"`
+		LanguageID int        `json:"language_id,omitempty"`
+		UserID     int        `json:"user_id,omitempty"`
+		Position   int        `json:"position,omitempty"`
+		CreatedAt  ftapi.Time `json:"created_at,omitempty"`
 	}
 	LanguagesUsers struct {
 		req        ftapi.RequestData

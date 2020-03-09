@@ -9,9 +9,9 @@ import (
 type (
 	Language struct {
 		req        ftapi.RequestData
-		ID         int    `json:"id"`
-		Name       string `json:"name"`
-		Identifier string `json:"identifier"`
+		ID         int    `json:"id,omitempty"`
+		Name       string `json:"name,omitempty"`
+		Identifier string `json:"identifier,omitempty"`
 	}
 	Languages struct {
 		req        ftapi.RequestData

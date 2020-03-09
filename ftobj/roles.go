@@ -9,9 +9,9 @@ import (
 type (
 	Role struct {
 		req         ftapi.RequestData
-		ID          int    `json:"id"`
-		Name        string `json:"name"`
-		Description string `json:"description"`
+		ID          int    `json:"id,omitempty"`
+		Name        string `json:"name,omitempty"`
+		Description string `json:"description,omitempty"`
 	}
 	Roles struct {
 		req        ftapi.RequestData

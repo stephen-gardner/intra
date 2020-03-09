@@ -9,20 +9,20 @@ import (
 type (
 	Campus struct {
 		req         ftapi.RequestData
-		ID          int      `json:"id"`
-		Name        string   `json:"name"`
-		TimeZone    string   `json:"time_zone"`
-		Language    Language `json:"language"`
-		UsersCount  int      `json:"users_count"`
-		VogsphereID int      `json:"vogsphere_id"`
-		Country     string   `json:"country"`
-		Address     string   `json:"address"`
-		Zip         string   `json:"zip"`
-		City        string   `json:"city"`
-		Website     string   `json:"website"`
-		Facebook    string   `json:"facebook"`
-		Twitter     string   `json:"twitter"`
-		Endpoint    Endpoint `json:"endpoint"`
+		ID          int      `json:"id,omitempty"`
+		Name        string   `json:"name,omitempty"`
+		TimeZone    string   `json:"time_zone,omitempty"`
+		Language    Language `json:"language,omitempty"`
+		UsersCount  int      `json:"users_count,omitempty"`
+		VogsphereID int      `json:"vogsphere_id,omitempty"`
+		Country     string   `json:"country,omitempty"`
+		Address     string   `json:"address,omitempty"`
+		Zip         string   `json:"zip,omitempty"`
+		City        string   `json:"city,omitempty"`
+		Website     string   `json:"website,omitempty"`
+		Facebook    string   `json:"facebook,omitempty"`
+		Twitter     string   `json:"twitter,omitempty"`
+		Endpoint    Endpoint `json:"endpoint,omitempty"`
 	}
 	Campuses struct {
 		req        ftapi.RequestData

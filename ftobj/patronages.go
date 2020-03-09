@@ -9,22 +9,22 @@ import (
 type (
 	Patronage struct {
 		req         ftapi.RequestData
-		ID          int        `json:"id"`
-		UserID      int        `json:"user_id"`
-		GodfatherID int        `json:"godfather_id"`
-		Ongoing     bool       `json:"ongoing"`
-		CreatedAt   ftapi.Time `json:"created_at"`
-		UpdatedAt   ftapi.Time `json:"updated_at"`
+		ID          int        `json:"id,omitempty"`
+		UserID      int        `json:"user_id,omitempty"`
+		GodfatherID int        `json:"godfather_id,omitempty"`
+		Ongoing     bool       `json:"ongoing,omitempty"`
+		CreatedAt   ftapi.Time `json:"created_at,omitempty"`
+		UpdatedAt   ftapi.Time `json:"updated_at,omitempty"`
 		User        struct {
-			ID    int    `json:"id"`
-			Login string `json:"login"`
-			URL   string `json:"url"`
-		} `json:"user"`
+			ID    int    `json:"id,omitempty"`
+			Login string `json:"login,omitempty"`
+			URL   string `json:"url,omitempty"`
+		} `json:"user,omitempty"`
 		Godfather struct {
-			ID    int    `json:"id"`
-			Login string `json:"login"`
-			URL   string `json:"url"`
-		} `json:"godfather"`
+			ID    int    `json:"id,omitempty"`
+			Login string `json:"login,omitempty"`
+			URL   string `json:"url,omitempty"`
+		} `json:"godfather,omitempty"`
 	}
 	Patronages struct {
 		req        ftapi.RequestData

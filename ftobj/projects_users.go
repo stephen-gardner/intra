@@ -10,52 +10,52 @@ import (
 type (
 	ProjectsUser struct {
 		req           ftapi.RequestData
-		ID            int    `json:"id"`
-		Occurrence    int    `json:"occurrence"`
-		FinalMark     int    `json:"final_mark"`
-		Status        string `json:"status"`
-		Validated     bool   `json:"validated?"`
-		CurrentTeamID int    `json:"current_team_id"`
+		ID            int    `json:"id,omitempty"`
+		Occurrence    int    `json:"occurrence,omitempty"`
+		FinalMark     int    `json:"final_mark,omitempty"`
+		Status        string `json:"status,omitempty"`
+		Validated     bool   `json:"validated?,omitempty"`
+		CurrentTeamID int    `json:"current_team_id,omitempty"`
 		Project       struct {
-			ID       int    `json:"id"`
-			Name     string `json:"name"`
-			Slug     string `json:"slug"`
-			ParentID int    `json:"parent_id"`
-		} `json:"project"`
-		CursusIds []int `json:"cursus_ids"`
+			ID       int    `json:"id,omitempty"`
+			Name     string `json:"name,omitempty"`
+			Slug     string `json:"slug,omitempty"`
+			ParentID int    `json:"parent_id,omitempty"`
+		} `json:"project,omitempty"`
+		CursusIds []int `json:"cursus_ids,omitempty"`
 		User      struct {
-			ID    int    `json:"id"`
-			Login string `json:"login"`
-			URL   string `json:"url"`
-		} `json:"user"`
+			ID    int    `json:"id,omitempty"`
+			Login string `json:"login,omitempty"`
+			URL   string `json:"url,omitempty"`
+		} `json:"user,omitempty"`
 		Teams []struct {
-			ID            int        `json:"id"`
-			Name          string     `json:"name"`
-			URL           string     `json:"url"`
-			FinalMark     int        `json:"final_mark"`
-			ProjectID     int        `json:"project_id"`
-			CreatedAt     ftapi.Time `json:"created_at"`
-			UpdatedAt     ftapi.Time `json:"updated_at"`
-			Status        string     `json:"status"`
-			TerminatingAt ftapi.Time `json:"terminating_at"`
+			ID            int        `json:"id,omitempty"`
+			Name          string     `json:"name,omitempty"`
+			URL           string     `json:"url,omitempty"`
+			FinalMark     int        `json:"final_mark,omitempty"`
+			ProjectID     int        `json:"project_id,omitempty"`
+			CreatedAt     ftapi.Time `json:"created_at,omitempty"`
+			UpdatedAt     ftapi.Time `json:"updated_at,omitempty"`
+			Status        string     `json:"status,omitempty"`
+			TerminatingAt ftapi.Time `json:"terminating_at,omitempty"`
 			Users         []struct {
-				ID             int    `json:"id"`
-				Login          string `json:"login"`
-				URL            string `json:"url"`
-				Leader         bool   `json:"leader"`
-				Occurrence     int    `json:"occurrence"`
-				Validated      bool   `json:"validated"`
-				ProjectsUserID int    `json:"projects_user_id"`
-			} `json:"users"`
-			Locked           bool       `json:"locked?"`
-			Validated        bool       `json:"validated?"`
-			Closed           bool       `json:"closed?"`
-			RepoURL          string     `json:"repo_url"`
-			RepoUUID         string     `json:"repo_uuid"`
-			LockedAt         ftapi.Time `json:"locked_at"`
-			ClosedAt         ftapi.Time `json:"closed_at"`
-			ProjectSessionID int        `json:"project_session_id"`
-		} `json:"teams"`
+				ID             int    `json:"id,omitempty"`
+				Login          string `json:"login,omitempty"`
+				URL            string `json:"url,omitempty"`
+				Leader         bool   `json:"leader,omitempty"`
+				Occurrence     int    `json:"occurrence,omitempty"`
+				Validated      bool   `json:"validated,omitempty"`
+				ProjectsUserID int    `json:"projects_user_id,omitempty"`
+			} `json:"users,omitempty"`
+			Locked           bool       `json:"locked?,omitempty"`
+			Validated        bool       `json:"validated?,omitempty"`
+			Closed           bool       `json:"closed?,omitempty"`
+			RepoURL          string     `json:"repo_url,omitempty"`
+			RepoUUID         string     `json:"repo_uuid,omitempty"`
+			LockedAt         ftapi.Time `json:"locked_at,omitempty"`
+			ClosedAt         ftapi.Time `json:"closed_at,omitempty"`
+			ProjectSessionID int        `json:"project_session_id,omitempty"`
+		} `json:"teams,omitempty"`
 	}
 	ProjectsUsers struct {
 		req        ftapi.RequestData

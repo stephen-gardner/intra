@@ -9,12 +9,12 @@ import (
 type (
 	Endpoint struct {
 		req         ftapi.RequestData
-		ID          int        `json:"id"`
-		URL         string     `json:"url"`
-		Description string     `json:"description"`
-		CreatedAt   ftapi.Time `json:"created_at"`
-		UpdatedAt   ftapi.Time `json:"updated_at"`
-		Campus      []Campus   `json:"campus"`
+		ID          int        `json:"id,omitempty"`
+		URL         string     `json:"url,omitempty"`
+		Description string     `json:"description,omitempty"`
+		CreatedAt   ftapi.Time `json:"created_at,omitempty"`
+		UpdatedAt   ftapi.Time `json:"updated_at,omitempty"`
+		Campus      []Campus   `json:"campus,omitempty"`
 	}
 	Endpoints struct {
 		req        ftapi.RequestData

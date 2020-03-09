@@ -9,10 +9,10 @@ import (
 type (
 	Cursus struct {
 		req       ftapi.RequestData
-		ID        int        `json:"id"`
-		CreatedAt ftapi.Time `json:"created_at"`
-		Name      string     `json:"name"`
-		Slug      string     `json:"slug"`
+		ID        int        `json:"id,omitempty"`
+		CreatedAt ftapi.Time `json:"created_at,omitempty"`
+		Name      string     `json:"name,omitempty"`
+		Slug      string     `json:"slug,omitempty"`
 	}
 	Cursuses struct {
 		req        ftapi.RequestData

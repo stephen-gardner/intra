@@ -9,83 +9,83 @@ import (
 type (
 	Project struct {
 		req         ftapi.RequestData
-		ID          int    `json:"id"`
-		Name        string `json:"name"`
-		Slug        string `json:"slug"`
-		Description string `json:"description"`
+		ID          int    `json:"id,omitempty"`
+		Name        string `json:"name,omitempty"`
+		Slug        string `json:"slug,omitempty"`
+		Description string `json:"description,omitempty"`
 		Parent      struct {
-			Name string `json:"name"`
-			ID   int    `json:"id"`
-			Slug string `json:"slug"`
-			URL  string `json:"url"`
-		} `json:"parent"`
+			Name string `json:"name,omitempty"`
+			ID   int    `json:"id,omitempty"`
+			Slug string `json:"slug,omitempty"`
+			URL  string `json:"url,omitempty"`
+		} `json:"parent,omitempty"`
 		Children []struct {
-			Name string `json:"name"`
-			ID   int    `json:"id"`
-			Slug string `json:"slug"`
-			URL  string `json:"url"`
-		} `json:"children"`
-		Objectives []string   `json:"objectives"`
-		Tier       int        `json:"tier"`
-		CreatedAt  ftapi.Time `json:"created_at"`
-		UpdatedAt  ftapi.Time `json:"updated_at"`
-		Exam       bool       `json:"exam"`
+			Name string `json:"name,omitempty"`
+			ID   int    `json:"id,omitempty"`
+			Slug string `json:"slug,omitempty"`
+			URL  string `json:"url,omitempty"`
+		} `json:"children,omitempty"`
+		Objectives []string   `json:"objectives,omitempty"`
+		Tier       int        `json:"tier,omitempty"`
+		CreatedAt  ftapi.Time `json:"created_at,omitempty"`
+		UpdatedAt  ftapi.Time `json:"updated_at,omitempty"`
+		Exam       bool       `json:"exam,omitempty"`
 		Cursus     []struct {
-			ID        int        `json:"id"`
-			CreatedAt ftapi.Time `json:"created_at"`
-			Name      string     `json:"name"`
-			Slug      string     `json:"slug"`
-		} `json:"cursus"`
+			ID        int        `json:"id,omitempty"`
+			CreatedAt ftapi.Time `json:"created_at,omitempty"`
+			Name      string     `json:"name,omitempty"`
+			Slug      string     `json:"slug,omitempty"`
+		} `json:"cursus,omitempty"`
 		Campus []struct {
-			ID       int    `json:"id"`
-			Name     string `json:"name"`
-			TimeZone string `json:"time_zone"`
+			ID       int    `json:"id,omitempty"`
+			Name     string `json:"name,omitempty"`
+			TimeZone string `json:"time_zone,omitempty"`
 			Language struct {
-				ID         int        `json:"id"`
-				Name       string     `json:"name"`
-				Identifier string     `json:"identifier"`
-				CreatedAt  ftapi.Time `json:"created_at"`
-				UpdatedAt  ftapi.Time `json:"updated_at"`
-			} `json:"language"`
-			UsersCount  int `json:"users_count"`
-			VogsphereID int `json:"vogsphere_id"`
-		} `json:"campus"`
+				ID         int        `json:"id,omitempty"`
+				Name       string     `json:"name,omitempty"`
+				Identifier string     `json:"identifier,omitempty"`
+				CreatedAt  ftapi.Time `json:"created_at,omitempty"`
+				UpdatedAt  ftapi.Time `json:"updated_at,omitempty"`
+			} `json:"language,omitempty"`
+			UsersCount  int `json:"users_count,omitempty"`
+			VogsphereID int `json:"vogsphere_id,omitempty"`
+		} `json:"campus,omitempty"`
 		Skills []struct {
-			ID        int        `json:"id"`
-			Name      string     `json:"name"`
-			CreatedAt ftapi.Time `json:"created_at"`
-		} `json:"skills"`
+			ID        int        `json:"id,omitempty"`
+			Name      string     `json:"name,omitempty"`
+			CreatedAt ftapi.Time `json:"created_at,omitempty"`
+		} `json:"skills,omitempty"`
 		Tags []struct {
-			ID   int    `json:"id"`
-			Name string `json:"name"`
-			Kind string `json:"kind"`
-		} `json:"tags"`
+			ID   int    `json:"id,omitempty"`
+			Name string `json:"name,omitempty"`
+			Kind string `json:"kind,omitempty"`
+		} `json:"tags,omitempty"`
 		ProjectSessions []struct {
-			ID               int        `json:"id"`
-			Solo             bool       `json:"solo"`
-			BeginAt          ftapi.Time `json:"begin_at"`
-			EndAt            ftapi.Time `json:"end_at"`
-			EstimateTime     int        `json:"estimate_time"`
-			DurationDays     int        `json:"duration_days"`
-			TerminatingAfter int        `json:"terminating_after"`
-			ProjectID        int        `json:"project_id"`
-			CampusID         int        `json:"campus_id"`
-			CursusID         int        `json:"cursus_id"`
-			CreatedAt        ftapi.Time `json:"created_at"`
-			UpdatedAt        ftapi.Time `json:"updated_at"`
-			MaxPeople        int        `json:"max_people"`
-			IsSubscriptable  bool       `json:"is_subscriptable"`
+			ID               int        `json:"id,omitempty"`
+			Solo             bool       `json:"solo,omitempty"`
+			BeginAt          ftapi.Time `json:"begin_at,omitempty"`
+			EndAt            ftapi.Time `json:"end_at,omitempty"`
+			EstimateTime     int        `json:"estimate_time,omitempty"`
+			DurationDays     int        `json:"duration_days,omitempty"`
+			TerminatingAfter int        `json:"terminating_after,omitempty"`
+			ProjectID        int        `json:"project_id,omitempty"`
+			CampusID         int        `json:"campus_id,omitempty"`
+			CursusID         int        `json:"cursus_id,omitempty"`
+			CreatedAt        ftapi.Time `json:"created_at,omitempty"`
+			UpdatedAt        ftapi.Time `json:"updated_at,omitempty"`
+			MaxPeople        int        `json:"max_people,omitempty"`
+			IsSubscriptable  bool       `json:"is_subscriptable,omitempty"`
 			Scales           []struct {
-				ID               int  `json:"id"`
-				CorrectionNumber int  `json:"correction_number"`
-				IsPrimary        bool `json:"is_primary"`
-			} `json:"scales"`
+				ID               int  `json:"id,omitempty"`
+				CorrectionNumber int  `json:"correction_number,omitempty"`
+				IsPrimary        bool `json:"is_primary,omitempty"`
+			} `json:"scales,omitempty"`
 			Uploads []struct {
-				ID   int    `json:"id"`
-				Name string `json:"name"`
-			} `json:"uploads"`
-			TeamBehaviour string `json:"team_behaviour"`
-		} `json:"project_sessions"`
+				ID   int    `json:"id,omitempty"`
+				Name string `json:"name,omitempty"`
+			} `json:"uploads,omitempty"`
+			TeamBehaviour string `json:"team_behaviour,omitempty"`
+		} `json:"project_sessions,omitempty"`
 	}
 	Projects struct {
 		req        ftapi.RequestData

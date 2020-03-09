@@ -9,10 +9,10 @@ import (
 type (
 	CampusUser struct {
 		req       ftapi.RequestData
-		ID        int  `json:"id"`
-		CampusID  int  `json:"campus_id"`
-		UserID    int  `json:"user_id"`
-		IsPrimary bool `json:"is_primary"`
+		ID        int  `json:"id,omitempty"`
+		CampusID  int  `json:"campus_id,omitempty"`
+		UserID    int  `json:"user_id,omitempty"`
+		IsPrimary bool `json:"is_primary,omitempty"`
 	}
 	CampusUsers struct {
 		req        ftapi.RequestData

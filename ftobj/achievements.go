@@ -7,26 +7,20 @@ import (
 )
 
 type (
-	AchievementData struct {
-		ID           int    `json:"id"`
-		Name         string `json:"name"`
-		Description  string `json:"description"`
-		Tier         string `json:"tier"`
-		Kind         string `json:"kind"`
-		Visible      bool   `json:"visible"`
-		Image        string `json:"image"`
-		NbrOfSuccess int    `json:"nbr_of_success"`
-		UsersURL     string `json:"users_url"`
-	}
 	Achievement struct {
-		AchievementData
 		req          ftapi.RequestData
-		Achievements []AchievementData `json:"achievements"`
-		Parent       AchievementData   `json:"parent"`
-		Title        struct {
-			ID   int    `json:"id"`
-			Name string `json:"name"`
-		} `json:"title"`
+		ID           int           `json:"id,omitempty"`
+		Name         string        `json:"name,omitempty"`
+		Description  string        `json:"description,omitempty"`
+		Tier         string        `json:"tier,omitempty"`
+		Kind         string        `json:"kind,omitempty"`
+		Visible      bool          `json:"visible,omitempty"`
+		Image        string        `json:"image,omitempty"`
+		NbrOfSuccess int           `json:"nbr_of_success,omitempty"`
+		UsersURL     string        `json:"users_url,omitempty"`
+		Achievements []Achievement `json:"achievements,omitempty"`
+		Parent       *Achievement  `json:"parent,omitempty"`
+		Title        *Title        `json:"title,omitempty"`
 	}
 	Achievements struct {
 		req        ftapi.RequestData

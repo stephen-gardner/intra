@@ -9,20 +9,20 @@ import (
 type (
 	Partnership struct {
 		req                  ftapi.RequestData
-		ID                   int    `json:"id"`
-		Name                 string `json:"name"`
-		Slug                 string `json:"slug"`
-		Difficulty           int    `json:"difficulty"`
-		URL                  string `json:"url"`
-		PartnershipsUsersURL string `json:"partnerships_users_url"`
+		ID                   int    `json:"id,omitempty"`
+		Name                 string `json:"name,omitempty"`
+		Slug                 string `json:"slug,omitempty"`
+		Difficulty           int    `json:"difficulty,omitempty"`
+		URL                  string `json:"url,omitempty"`
+		PartnershipsUsersURL string `json:"partnerships_users_url,omitempty"`
 		PartnershipsSkills   []struct {
-			ID            int        `json:"id"`
-			PartnershipID int        `json:"partnership_id"`
-			SkillID       int        `json:"skill_id"`
-			Value         float64    `json:"value"`
-			CreatedAt     ftapi.Time `json:"created_at"`
-			UpdatedAt     ftapi.Time `json:"updated_at"`
-		} `json:"partnerships_skills"`
+			ID            int        `json:"id,omitempty"`
+			PartnershipID int        `json:"partnership_id,omitempty"`
+			SkillID       int        `json:"skill_id,omitempty"`
+			Value         float64    `json:"value,omitempty"`
+			CreatedAt     ftapi.Time `json:"created_at,omitempty"`
+			UpdatedAt     ftapi.Time `json:"updated_at,omitempty"`
+		} `json:"partnerships_skills,omitempty"`
 	}
 	Partnerships struct {
 		req        ftapi.RequestData

@@ -9,13 +9,13 @@ import (
 type (
 	AchievementsUser struct {
 		req           ftapi.RequestData
-		ID            int        `json:"id"`
-		AchievementID int        `json:"achievement_id"`
-		UserID        int        `json:"user_id"`
-		Login         string     `json:"login"`
-		NbrOfSuccess  int        `json:"nbr_of_success"`
-		URL           string     `json:"url"`
-		CreatedAt     ftapi.Time `json:"created_at"`
+		ID            int        `json:"id,omitempty"`
+		AchievementID int        `json:"achievement_id,omitempty"`
+		UserID        int        `json:"user_id,omitempty"`
+		Login         string     `json:"login,omitempty"`
+		NbrOfSuccess  int        `json:"nbr_of_success,omitempty"`
+		URL           string     `json:"url,omitempty"`
+		CreatedAt     ftapi.Time `json:"created_at,omitempty"`
 	}
 	AchievementsUsers struct {
 		req        ftapi.RequestData

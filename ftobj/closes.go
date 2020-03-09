@@ -10,31 +10,31 @@ import (
 type (
 	UserClose struct {
 		req               ftapi.RequestData
-		ID                int        `json:"id"`
-		Reason            string     `json:"reason"`
-		State             string     `json:"state"`
-		PrimaryCampusID   int        `json:"primary_campus_id"`
-		CreatedAt         ftapi.Time `json:"created_at"`
-		UpdatedAt         ftapi.Time `json:"updated_at"`
+		ID                int        `json:"id,omitempty"`
+		Reason            string     `json:"reason,omitempty"`
+		State             string     `json:"state,omitempty"`
+		PrimaryCampusID   int        `json:"primary_campus_id,omitempty"`
+		CreatedAt         ftapi.Time `json:"created_at,omitempty"`
+		UpdatedAt         ftapi.Time `json:"updated_at,omitempty"`
 		CommunityServices []struct {
-			ID         int        `json:"id"`
-			Duration   int        `json:"duration"`
-			ScheduleAt ftapi.Time `json:"schedule_at"`
-			Occupation string     `json:"occupation"`
-			State      string     `json:"state"`
-			CreatedAt  ftapi.Time `json:"created_at"`
-			UpdatedAt  ftapi.Time `json:"updated_at"`
-		} `json:"community_services"`
+			ID         int        `json:"id,omitempty"`
+			Duration   int        `json:"duration,omitempty"`
+			ScheduleAt ftapi.Time `json:"schedule_at,omitempty"`
+			Occupation string     `json:"occupation,omitempty"`
+			State      string     `json:"state,omitempty"`
+			CreatedAt  ftapi.Time `json:"created_at,omitempty"`
+			UpdatedAt  ftapi.Time `json:"updated_at,omitempty"`
+		} `json:"community_services,omitempty"`
 		User struct {
-			ID    int    `json:"id"`
-			Login string `json:"login"`
-			URL   string `json:"url"`
-		} `json:"user"`
+			ID    int    `json:"id,omitempty"`
+			Login string `json:"login,omitempty"`
+			URL   string `json:"url,omitempty"`
+		} `json:"user,omitempty"`
 		Closer struct {
-			ID    int    `json:"id"`
-			Login string `json:"login"`
-			URL   string `json:"url"`
-		} `json:"closer"`
+			ID    int    `json:"id,omitempty"`
+			Login string `json:"login,omitempty"`
+			URL   string `json:"url,omitempty"`
+		} `json:"closer,omitempty"`
 	}
 	UserCloses struct {
 		req        ftapi.RequestData

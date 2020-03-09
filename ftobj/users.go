@@ -9,34 +9,34 @@ import (
 type (
 	User struct {
 		req             ftapi.RequestData
-		ID              int              `json:"id"`
-		Email           string           `json:"email"`
-		Login           string           `json:"login"`
-		FirstName       string           `json:"first_name"`
-		LastName        string           `json:"last_name"`
-		URL             string           `json:"url"`
-		Phone           string           `json:"phone"`
-		DisplayName     string           `json:"displayname"`
-		ImageURL        string           `json:"image_url"`
-		Staff           bool             `json:"staff?"`
-		CorrectionPoint int              `json:"correction_point"`
-		PoolMonth       string           `json:"pool_month"`
-		PoolYear        string           `json:"pool_year"`
-		Location        string           `json:"location"`
-		Wallet          int              `json:"wallet"`
-		Groups          []Group          `json:"groups"`
-		CursusUsers     []CursusUser     `json:"cursus_users"`
-		ProjectsUsers   []ProjectsUser   `json:"projects_users"`
-		LanguagesUsers  []LanguagesUser  `json:"languages_users"`
-		Achievements    []Achievement    `json:"achievements"`
-		Titles          []Title          `json:"titles"`
-		TitlesUsers     []TitlesUser     `json:"titles_users"`
-		Partnerships    []Partnership    `json:"partnerships"`
-		Patroned        []Patronage      `json:"patroned"`
-		Patroning       []Patronage      `json:"patroning"`
-		ExpertisesUsers []ExpertisesUser `json:"expertises_users"`
-		Campus          []Campus         `json:"campus"`
-		CampusUsers     []CampusUser     `json:"campus_users"`
+		ID              int              `json:"id,omitempty"`
+		Email           string           `json:"email,omitempty"`
+		Login           string           `json:"login,omitempty"`
+		FirstName       string           `json:"first_name,omitempty"`
+		LastName        string           `json:"last_name,omitempty"`
+		URL             string           `json:"url,omitempty"`
+		Phone           string           `json:"phone,omitempty"`
+		DisplayName     string           `json:"displayname,omitempty"`
+		ImageURL        string           `json:"image_url,omitempty"`
+		Staff           bool             `json:"staff?,omitempty"`
+		CorrectionPoint int              `json:"correction_point,omitempty"`
+		PoolMonth       string           `json:"pool_month,omitempty"`
+		PoolYear        string           `json:"pool_year,omitempty"`
+		Location        string           `json:"location,omitempty"`
+		Wallet          int              `json:"wallet,omitempty"`
+		Groups          []Group          `json:"groups,omitempty"`
+		CursusUsers     []CursusUser     `json:"cursus_users,omitempty"`
+		ProjectsUsers   []ProjectsUser   `json:"projects_users,omitempty"`
+		LanguagesUsers  []LanguagesUser  `json:"languages_users,omitempty"`
+		Achievements    []Achievement    `json:"achievements,omitempty"`
+		Titles          []Title          `json:"titles,omitempty"`
+		TitlesUsers     []TitlesUser     `json:"titles_users,omitempty"`
+		Partnerships    []Partnership    `json:"partnerships,omitempty"`
+		Patroned        []Patronage      `json:"patroned,omitempty"`
+		Patroning       []Patronage      `json:"patroning,omitempty"`
+		ExpertisesUsers []ExpertisesUser `json:"expertises_users,omitempty"`
+		Campus          []Campus         `json:"campus,omitempty"`
+		CampusUsers     []CampusUser     `json:"campus_users,omitempty"`
 	}
 	Users struct {
 		req        ftapi.RequestData
