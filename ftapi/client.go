@@ -106,6 +106,7 @@ func (req *RequestData) Make(ctx context.Context, method string) (status int, bo
 	var finalReq *http.Request
 	if finalReq, req.Error = http.NewRequest(method, req.Endpoint, requestBody); req.Error == nil {
 		finalReq.Header.Add("Content-Type", req.ContentType)
+		finalReq.Header.Add("Accept", "application/json")
 		var resp *http.Response
 		if resp, req.Error = GetClient(ctx).Do(finalReq); req.Error == nil {
 			defer resp.Body.Close()
