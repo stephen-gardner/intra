@@ -9,57 +9,55 @@ import (
 type (
 	Team struct {
 		req           ftapi.RequestData
-		ID            int        `json:"id,omitempty"`
-		Name          string     `json:"name,omitempty"`
-		URL           string     `json:"url,omitempty"`
-		FinalMark     int        `json:"final_mark,omitempty"`
-		ProjectID     int        `json:"project_id,omitempty"`
-		CreatedAt     ftapi.Time `json:"created_at,omitempty"`
-		UpdatedAt     ftapi.Time `json:"updated_at,omitempty"`
-		Status        string     `json:"status,omitempty"`
-		TerminatingAt ftapi.Time `json:"terminating_at,omitempty"`
+		ID            int         `json:"id,omitempty"`
+		Name          string      `json:"name,omitempty"`
+		URL           string      `json:"url,omitempty"`
+		FinalMark     int         `json:"final_mark,omitempty"`
+		ProjectID     int         `json:"project_id,omitempty"`
+		CreatedAt     *ftapi.Time `json:"created_at,omitempty"`
+		UpdatedAt     *ftapi.Time `json:"updated_at,omitempty"`
+		Status        string      `json:"status,omitempty"`
+		TerminatingAt *ftapi.Time `json:"terminating_at,omitempty"`
 		Users         []struct {
-			ID             int    `json:"id,omitempty"`
-			Login          string `json:"login,omitempty"`
-			URL            string `json:"url,omitempty"`
-			Leader         bool   `json:"leader,omitempty"`
-			Occurrence     int    `json:"occurrence,omitempty"`
-			Validated      bool   `json:"validated,omitempty"`
-			ProjectsUserID int    `json:"projects_user_id,omitempty"`
+			User
+			Leader         bool `json:"leader,omitempty"`
+			Occurrence     int  `json:"occurrence,omitempty"`
+			Validated      bool `json:"validated,omitempty"`
+			ProjectsUserID int  `json:"projects_user_id,omitempty"`
 		} `json:"users,omitempty"`
-		Locked           bool       `json:"locked?,omitempty"`
-		Validated        bool       `json:"validated?,omitempty"`
-		Closed           bool       `json:"closed?,omitempty"`
-		RepoURL          string     `json:"repo_url,omitempty"`
-		RepoUUID         string     `json:"repo_uuid,omitempty"`
-		LockedAt         ftapi.Time `json:"locked_at,omitempty"`
-		ClosedAt         ftapi.Time `json:"closed_at,omitempty"`
-		ProjectSessionID int        `json:"project_session_id,omitempty"`
+		Locked           bool        `json:"locked?,omitempty"`
+		Validated        bool        `json:"validated?,omitempty"`
+		Closed           bool        `json:"closed?,omitempty"`
+		RepoURL          string      `json:"repo_url,omitempty"`
+		RepoUUID         string      `json:"repo_uuid,omitempty"`
+		LockedAt         *ftapi.Time `json:"locked_at,omitempty"`
+		ClosedAt         *ftapi.Time `json:"closed_at,omitempty"`
+		ProjectSessionID int         `json:"project_session_id,omitempty"`
 		ScaleTeams       []struct {
-			ID        int        `json:"id,omitempty"`
-			ScaleID   int        `json:"scale_id,omitempty"`
-			Comment   string     `json:"comment,omitempty"`
-			CreatedAt ftapi.Time `json:"created_at,omitempty"`
-			UpdatedAt ftapi.Time `json:"updated_at,omitempty"`
-			Feedback  string     `json:"feedback,omitempty"`
-			FinalMark int        `json:"final_mark,omitempty"`
+			ID        int         `json:"id,omitempty"`
+			ScaleID   int         `json:"scale_id,omitempty"`
+			Comment   string      `json:"comment,omitempty"`
+			CreatedAt *ftapi.Time `json:"created_at,omitempty"`
+			UpdatedAt *ftapi.Time `json:"updated_at,omitempty"`
+			Feedback  string      `json:"feedback,omitempty"`
+			FinalMark int         `json:"final_mark,omitempty"`
 			Flag      struct {
-				ID        int        `json:"id,omitempty"`
-				Name      string     `json:"name,omitempty"`
-				Positive  bool       `json:"positive,omitempty"`
-				Icon      string     `json:"icon,omitempty"`
-				CreatedAt ftapi.Time `json:"created_at,omitempty"`
-				UpdatedAt ftapi.Time `json:"updated_at,omitempty"`
-			} `json:"flag,omitempty"`
-			BeginAt  ftapi.Time `json:"begin_at,omitempty"`
-			FilledAt ftapi.Time `json:"filled_at,omitempty"`
+				ID        int         `json:"id,omitempty"`
+				Name      string      `json:"name,omitempty"`
+				Positive  bool        `json:"positive,omitempty"`
+				Icon      string      `json:"icon,omitempty"`
+				CreatedAt *ftapi.Time `json:"created_at,omitempty"`
+				UpdatedAt *ftapi.Time `json:"updated_at,omitempty"`
+			} `json:"flag"`
+			BeginAt  *ftapi.Time `json:"begin_at,omitempty"`
+			FilledAt *ftapi.Time `json:"filled_at,omitempty"`
 		} `json:"scale_teams,omitempty"`
 		TeamUploads []struct {
-			ID        int        `json:"id,omitempty"`
-			FinalMark int        `json:"final_mark,omitempty"`
-			Comment   string     `json:"comment,omitempty"`
-			CreatedAt ftapi.Time `json:"created_at,omitempty"`
-			UploadID  int        `json:"upload_id,omitempty"`
+			ID        int         `json:"id,omitempty"`
+			FinalMark int         `json:"final_mark,omitempty"`
+			Comment   string      `json:"comment,omitempty"`
+			CreatedAt *ftapi.Time `json:"created_at,omitempty"`
+			UploadID  int         `json:"upload_id,omitempty"`
 		} `json:"team_uploads,omitempty"`
 	}
 	Teams struct {
@@ -67,22 +65,17 @@ type (
 		Collection []Team
 	}
 	TeamCUParams struct {
-		Name             string     `json:"name,omitempty"`
-		CreatedAt        ftapi.Time `json:"created_at,omitempty"`
-		UpdatedAt        ftapi.Time `json:"updated_at,omitempty"`
-		LockedAt         ftapi.Time `json:"locked_at,omitempty"`
-		ClosedAt         ftapi.Time `json:"closed_at,omitempty"`
-		FinalMark        int        `json:"final_mark,omitempty"`
-		RepoURL          string     `json:"repo_url,omitempty"`
-		RepoUUID         string     `json:"repo_uuid,omitempty"`
-		TerminatingAt    ftapi.Time `json:"terminating_at,omitempty"`
-		ProjectSessionID int        `json:"project_session_id,omitempty"`
-		UsersAttributes  struct {
-			UserID     int  `json:"user_id,omitempty"`
-			Leader     bool `json:"leader,omitempty"`
-			Validated  bool `json:"validated,omitempty"`
-			Occurrence int  `json:"occurrence,omitempty"`
-		} `json:"teams_users_attributes,omitempty"`
+		Name                 string              `json:"name,omitempty"`
+		CreatedAt            *ftapi.Time         `json:"created_at,omitempty"`
+		UpdatedAt            *ftapi.Time         `json:"updated_at,omitempty"`
+		LockedAt             *ftapi.Time         `json:"locked_at,omitempty"`
+		ClosedAt             *ftapi.Time         `json:"closed_at,omitempty"`
+		FinalMark            int                 `json:"final_mark,omitempty"`
+		RepoURL              string              `json:"repo_url,omitempty"`
+		RepoUUID             string              `json:"repo_uuid,omitempty"`
+		TerminatingAt        *ftapi.Time         `json:"terminating_at,omitempty"`
+		ProjectSessionID     int                 `json:"project_session_id,omitempty"`
+		TeamsUsersAttributes []TeamsUserCUParams `json:"teams_users_attributes,omitempty"`
 	}
 )
 

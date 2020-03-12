@@ -9,25 +9,25 @@ import (
 type (
 	CommunityService struct {
 		req        ftapi.RequestData
-		ID         int        `json:"id,omitempty"`
-		Duration   int        `json:"duration,omitempty"`
-		ScheduleAt ftapi.Time `json:"schedule_at,omitempty"`
-		Occupation string     `json:"occupation,omitempty"`
-		State      string     `json:"state,omitempty"`
-		CreatedAt  ftapi.Time `json:"created_at,omitempty"`
-		UpdatedAt  ftapi.Time `json:"updated_at,omitempty"`
-		Close      UserClose  `json:"close,omitempty"`
+		ID         int         `json:"id,omitempty"`
+		Duration   int         `json:"duration,omitempty"`
+		ScheduleAt *ftapi.Time `json:"schedule_at,omitempty"`
+		Occupation string      `json:"occupation,omitempty"`
+		State      string      `json:"state,omitempty"`
+		CreatedAt  *ftapi.Time `json:"created_at,omitempty"`
+		UpdatedAt  *ftapi.Time `json:"updated_at,omitempty"`
+		Close      *UserClose  `json:"close,omitempty"`
 	}
 	CommunityServices struct {
 		req        ftapi.RequestData
 		Collection []CommunityService
 	}
 	CommunityServiceCUParams struct {
-		Duration   int        `json:"duration,omitempty"`
-		Occupation string     `json:"occupation,omitempty"`
-		ScheduleAt ftapi.Time `json:"schedule_at,omitempty"`
-		CloseID    int        `json:"close_id,omitempty"`
-		TigerID    int        `json:"tiger_id,omitempty"`
+		Duration   int         `json:"duration,omitempty"`
+		Occupation string      `json:"occupation,omitempty"`
+		ScheduleAt *ftapi.Time `json:"schedule_at,omitempty"`
+		CloseID    int         `json:"close_id,omitempty"`
+		TigerID    int         `json:"tiger_id,omitempty"`
 	}
 )
 

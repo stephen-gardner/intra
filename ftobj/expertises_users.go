@@ -9,19 +9,15 @@ import (
 type (
 	ExpertisesUser struct {
 		req         ftapi.RequestData
-		ID          int        `json:"id,omitempty"`
-		ExpertiseID int        `json:"expertise_id,omitempty"`
-		Interested  bool       `json:"interested,omitempty"`
-		Value       int        `json:"value,omitempty"`
-		ContactMe   bool       `json:"contact_me,omitempty"`
-		CreatedAt   ftapi.Time `json:"created_at,omitempty"`
-		UserID      int        `json:"user_id,omitempty"`
-		Expertise   Expertise  `json:"expertise,omitempty"`
-		User        struct {
-			ID    int    `json:"id,omitempty"`
-			Login string `json:"login,omitempty"`
-			URL   string `json:"url,omitempty"`
-		} `json:"user,omitempty"`
+		ID          int         `json:"id,omitempty"`
+		ExpertiseID int         `json:"expertise_id,omitempty"`
+		Interested  bool        `json:"interested,omitempty"`
+		Value       int         `json:"value,omitempty"`
+		ContactMe   bool        `json:"contact_me,omitempty"`
+		CreatedAt   *ftapi.Time `json:"created_at,omitempty"`
+		UserID      int         `json:"user_id,omitempty"`
+		Expertise   *Expertise  `json:"expertise,omitempty"`
+		User        *User       `json:"user,omitempty"`
 	}
 	ExpertisesUsers struct {
 		req        ftapi.RequestData

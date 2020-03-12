@@ -10,8 +10,8 @@ type (
 	CampusUser struct {
 		req       ftapi.RequestData
 		ID        int  `json:"id,omitempty"`
-		CampusID  int  `json:"campus_id,omitempty"`
 		UserID    int  `json:"user_id,omitempty"`
+		CampusID  int  `json:"campus_id,omitempty"`
 		IsPrimary bool `json:"is_primary,omitempty"`
 	}
 	CampusUsers struct {
@@ -25,7 +25,7 @@ type (
 	}
 )
 
-func (cu *CampusUser) Create(ctx context.Context, params CursusCUParams) ftapi.CachedRequest {
+func (cu *CampusUser) Create(ctx context.Context, params CampusUserCUParams) ftapi.CachedRequest {
 	cu.req.Endpoint = ftapi.GetEndpoint("campus_users", nil)
 	cu.req.ExecuteMethod = func() {
 		cu.req.Create(ctx, cu, ftapi.EncapsulatedMarshal("campus_user", params))
@@ -41,7 +41,7 @@ func (cu *CampusUser) Delete(ctx context.Context) ftapi.Request {
 	return &cu.req
 }
 
-func (cu *CampusUser) Patch(ctx context.Context, params CursusCUParams) ftapi.Request {
+func (cu *CampusUser) Patch(ctx context.Context, params CampusUserCUParams) ftapi.Request {
 	cu.req.Endpoint = ftapi.GetEndpoint("campus_users/"+strconv.Itoa(cu.ID), nil)
 	cu.req.ExecuteMethod = func() {
 		cu.req.Patch(ctx, ftapi.EncapsulatedMarshal("campus_user", params))

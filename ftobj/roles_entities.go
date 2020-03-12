@@ -9,43 +9,35 @@ import (
 type (
 	RolesEntity struct {
 		req        ftapi.RequestData
-		ID         int        `json:"id,omitempty"`
-		EntityID   int        `json:"entity_id,omitempty"`
-		EntityType string     `json:"entity_type,omitempty"`
-		CreatedAt  ftapi.Time `json:"created_at,omitempty"`
-		ExpiresAt  ftapi.Time `json:"expires_at,omitempty"`
+		ID         int         `json:"id,omitempty"`
+		EntityID   int         `json:"entity_id,omitempty"`
+		EntityType string      `json:"entity_type,omitempty"`
+		CreatedAt  *ftapi.Time `json:"created_at,omitempty"`
+		ExpiresAt  *ftapi.Time `json:"expires_at,omitempty"`
 		Entity     struct {
-			ID          int        `json:"id,omitempty"`
-			Name        string     `json:"name,omitempty"`
-			Description string     `json:"description,omitempty"`
-			Image       string     `json:"image,omitempty"`
-			Website     string     `json:"website,omitempty"`
-			Public      bool       `json:"public,omitempty"`
-			Scopes      []string   `json:"scopes,omitempty"`
-			CreatedAt   ftapi.Time `json:"created_at,omitempty"`
-			UpdatedAt   ftapi.Time `json:"updated_at,omitempty"`
-			Owner       struct {
-				ID    int    `json:"id,omitempty"`
-				Login string `json:"login,omitempty"`
-				URL   string `json:"url,omitempty"`
-			} `json:"owner,omitempty"`
-			RateLimit int `json:"rate_limit,omitempty"`
-		} `json:"entity,omitempty"`
-		Role struct {
-			ID          int    `json:"id,omitempty"`
-			Name        string `json:"name,omitempty"`
-			Description string `json:"description,omitempty"`
-		} `json:"role,omitempty"`
+			ID          int         `json:"id,omitempty"`
+			Name        string      `json:"name,omitempty"`
+			Description string      `json:"description,omitempty"`
+			Image       string      `json:"image,omitempty"`
+			Website     string      `json:"website,omitempty"`
+			Public      bool        `json:"public,omitempty"`
+			Scopes      []string    `json:"scopes,omitempty"`
+			CreatedAt   *ftapi.Time `json:"created_at,omitempty"`
+			UpdatedAt   *ftapi.Time `json:"updated_at,omitempty"`
+			Owner       *User       `json:"owner,omitempty"`
+			RateLimit   int         `json:"rate_limit,omitempty"`
+		} `json:"entity"`
+		Role *Role `json:"role,omitempty"`
 	}
 	RolesEntities struct {
 		req        ftapi.RequestData
 		Collection []RolesEntity
 	}
 	RolesEntityCUParams struct {
-		RoleID     int        `json:"role_id,omitempty"`
-		EntityID   int        `json:"entity_id,omitempty"`
-		ExpiresAt  ftapi.Time `json:"expires_at,omitempty"`
-		EntityType string     `json:"entity_type,omitempty"`
+		RoleID     int         `json:"role_id,omitempty"`
+		EntityID   int         `json:"entity_id,omitempty"`
+		ExpiresAt  *ftapi.Time `json:"expires_at,omitempty"`
+		EntityType string      `json:"entity_type,omitempty"`
 	}
 )
 

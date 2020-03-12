@@ -9,41 +9,31 @@ import (
 type (
 	CursusUser struct {
 		req          ftapi.RequestData
-		ID           int        `json:"id,omitempty"`
-		CursusID     int        `json:"cursus_id,omitempty"`
-		BeginAt      ftapi.Time `json:"begin_at,omitempty"`
-		EndAt        ftapi.Time `json:"end_at,omitempty"`
-		Grade        string     `json:"grade,omitempty"`
-		Level        float64    `json:"level,omitempty"`
-		HasCoalition bool       `json:"has_coalition,omitempty"`
+		ID           int         `json:"id,omitempty"`
+		CursusID     int         `json:"cursus_id,omitempty"`
+		BeginAt      *ftapi.Time `json:"begin_at,omitempty"`
+		EndAt        *ftapi.Time `json:"end_at,omitempty"`
+		Grade        string      `json:"grade,omitempty"`
+		Level        float64     `json:"level,omitempty"`
+		HasCoalition bool        `json:"has_coalition,omitempty"`
 		Skills       []struct {
-			ID    int     `json:"id,omitempty"`
-			Name  string  `json:"name,omitempty"`
+			Skill
 			Level float64 `json:"level,omitempty"`
-		} `json:"skills,omitempty"`
-		User struct {
-			ID    int    `json:"id,omitempty"`
-			Login string `json:"login,omitempty"`
-			URL   string `json:"url,omitempty"`
-		} `json:"user,omitempty"`
-		Cursus struct {
-			ID        int        `json:"id,omitempty"`
-			CreatedAt ftapi.Time `json:"created_at,omitempty"`
-			Name      string     `json:"name,omitempty"`
-			Slug      string     `json:"slug,omitempty"`
-		} `json:"cursus,omitempty"`
+		} `json:"skills"`
+		User   *User   `json:"user,omitempty"`
+		Cursus *Cursus `json:"cursus,omitempty"`
 	}
 	CursusUsers struct {
 		req        ftapi.RequestData
 		Collection []CursusUser
 	}
 	CursusUserCUParams struct {
-		CursusID            int        `json:"cursus_id,omitempty"`
-		UserID              int        `json:"user_id,omitempty"`
-		BeginAt             ftapi.Time `json:"begin_at,omitempty"`
-		EndAt               ftapi.Time `json:"end_at,omitempty"`
-		HasCoalition        bool       `json:"has_coalition,omitempty"`
-		SkipBeginValidation string     `json:"skip_begin_validation,omitempty"`
+		CursusID            int         `json:"cursus_id,omitempty"`
+		UserID              int         `json:"user_id,omitempty"`
+		BeginAt             *ftapi.Time `json:"begin_at,omitempty"`
+		EndAt               *ftapi.Time `json:"end_at,omitempty"`
+		HasCoalition        bool        `json:"has_coalition,omitempty"`
+		SkipBeginValidation string      `json:"skip_begin_validation,omitempty"`
 	}
 )
 

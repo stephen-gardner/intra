@@ -9,13 +9,13 @@ import (
 type (
 	Expertise struct {
 		req                ftapi.RequestData
-		ID                 int        `json:"id,omitempty"`
-		Name               string     `json:"name,omitempty"`
-		Slug               string     `json:"slug,omitempty"`
-		URL                string     `json:"url,omitempty"`
-		Kind               string     `json:"kind,omitempty"`
-		CreatedAt          ftapi.Time `json:"created_at,omitempty"`
-		ExpertisesUsersURL string     `json:"expertises_users_url,omitempty"`
+		ID                 int         `json:"id,omitempty"`
+		Name               string      `json:"name,omitempty"`
+		Slug               string      `json:"slug,omitempty"`
+		URL                string      `json:"url,omitempty"`
+		Kind               string      `json:"kind,omitempty"`
+		CreatedAt          *ftapi.Time `json:"created_at,omitempty"`
+		ExpertisesUsersURL string      `json:"expertises_users_url,omitempty"`
 	}
 	Expertises struct {
 		req        ftapi.RequestData

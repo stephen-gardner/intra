@@ -10,9 +10,9 @@ import (
 type (
 	GroupsUser struct {
 		req    ftapi.RequestData
-		ID     int   `json:"id,omitempty"`
-		UserID int   `json:"user_id,omitempty"`
-		Group  Group `json:"group,omitempty"`
+		ID     int    `json:"id,omitempty"`
+		UserID int    `json:"user_id,omitempty"`
+		Group  *Group `json:"group,omitempty"`
 	}
 	GroupsUsers struct {
 		req        ftapi.RequestData

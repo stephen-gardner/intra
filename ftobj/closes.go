@@ -10,31 +10,15 @@ import (
 type (
 	UserClose struct {
 		req               ftapi.RequestData
-		ID                int        `json:"id,omitempty"`
-		Reason            string     `json:"reason,omitempty"`
-		State             string     `json:"state,omitempty"`
-		PrimaryCampusID   int        `json:"primary_campus_id,omitempty"`
-		CreatedAt         ftapi.Time `json:"created_at,omitempty"`
-		UpdatedAt         ftapi.Time `json:"updated_at,omitempty"`
-		CommunityServices []struct {
-			ID         int        `json:"id,omitempty"`
-			Duration   int        `json:"duration,omitempty"`
-			ScheduleAt ftapi.Time `json:"schedule_at,omitempty"`
-			Occupation string     `json:"occupation,omitempty"`
-			State      string     `json:"state,omitempty"`
-			CreatedAt  ftapi.Time `json:"created_at,omitempty"`
-			UpdatedAt  ftapi.Time `json:"updated_at,omitempty"`
-		} `json:"community_services,omitempty"`
-		User struct {
-			ID    int    `json:"id,omitempty"`
-			Login string `json:"login,omitempty"`
-			URL   string `json:"url,omitempty"`
-		} `json:"user,omitempty"`
-		Closer struct {
-			ID    int    `json:"id,omitempty"`
-			Login string `json:"login,omitempty"`
-			URL   string `json:"url,omitempty"`
-		} `json:"closer,omitempty"`
+		ID                int                `json:"id,omitempty"`
+		Reason            string             `json:"reason,omitempty"`
+		State             string             `json:"state,omitempty"`
+		PrimaryCampusID   int                `json:"primary_campus_id,omitempty"`
+		CreatedAt         *ftapi.Time        `json:"created_at,omitempty"`
+		UpdatedAt         *ftapi.Time        `json:"updated_at,omitempty"`
+		CommunityServices []CommunityService `json:"community_services,omitempty"`
+		User              *User              `json:"user,omitempty"`
+		Closer            *User              `json:"closer,omitempty"`
 	}
 	UserCloses struct {
 		req        ftapi.RequestData

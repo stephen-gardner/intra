@@ -10,61 +10,43 @@ import (
 type (
 	Experience struct {
 		req               ftapi.RequestData
-		ID                int        `json:"id,omitempty"`
-		UserID            int        `json:"user_id,omitempty"`
-		SkillID           int        `json:"skill_id,omitempty"`
-		ExperiancableID   int        `json:"experiancable_id,omitempty"`
-		ExperiancableType string     `json:"experiancable_type,omitempty"`
-		Amount            int        `json:"experience,omitempty"`
-		CreatedAt         ftapi.Time `json:"created_at,omitempty"`
-		CursusID          int        `json:"cursus_id,omitempty"`
-		User              struct {
-			ID    int    `json:"id,omitempty"`
-			Login string `json:"login,omitempty"`
-			URL   string `json:"url,omitempty"`
-		} `json:"user,omitempty"`
-		Skill struct {
-			ID        int        `json:"id,omitempty"`
-			Name      string     `json:"name,omitempty"`
-			CreatedAt ftapi.Time `json:"created_at,omitempty"`
-		} `json:"skill,omitempty"`
-		Cursus struct {
-			ID        int        `json:"id,omitempty"`
-			CreatedAt ftapi.Time `json:"created_at,omitempty"`
-			Name      string     `json:"name,omitempty"`
-			Slug      string     `json:"slug,omitempty"`
-		} `json:"cursus,omitempty"`
-		Experiancable struct {
-			ID            int    `json:"id,omitempty"`
-			Occurrence    int    `json:"occurrence,omitempty"`
-			FinalMark     int    `json:"final_mark,omitempty"`
-			Status        string `json:"status,omitempty"`
-			Validated     bool   `json:"validated?,omitempty"`
-			CurrentTeamID int    `json:"current_team_id,omitempty"`
-			Project       struct {
-				ID       int         `json:"id,omitempty"`
-				Name     string      `json:"name,omitempty"`
-				Slug     string      `json:"slug,omitempty"`
-				ParentID interface{} `json:"parent_id,omitempty"`
-			} `json:"project,omitempty"`
-			CursusIds   []int      `json:"cursus_ids,omitempty"`
-			MarkedAt    ftapi.Time `json:"marked_at,omitempty"`
-			Marked      bool       `json:"marked,omitempty"`
-			RetriableAt ftapi.Time `json:"retriable_at,omitempty"`
-		} `json:"experiancable,omitempty"`
+		ID                int         `json:"id,omitempty"`
+		UserID            int         `json:"user_id,omitempty"`
+		SkillID           int         `json:"skill_id,omitempty"`
+		ExperiancableID   int         `json:"experiancable_id,omitempty"`
+		ExperiancableType string      `json:"experiancable_type,omitempty"`
+		Amount            int         `json:"experience,omitempty"`
+		CreatedAt         *ftapi.Time `json:"created_at,omitempty"`
+		CursusID          int         `json:"cursus_id,omitempty"`
+		User              *User       `json:"user,omitempty"`
+		Skill             *Skill      `json:"skill,omitempty"`
+		Cursus            *Cursus     `json:"cursus,omitempty"`
+		Experiancable     struct {
+			ID            int         `json:"id,omitempty"`
+			Occurrence    int         `json:"occurrence,omitempty"`
+			FinalMark     int         `json:"final_mark,omitempty"`
+			Status        string      `json:"status,omitempty"`
+			Validated     bool        `json:"validated?,omitempty"`
+			CurrentTeamID int         `json:"current_team_id,omitempty"`
+			Project       *Project    `json:"project,omitempty"`
+			CursusIds     []int       `json:"cursus_ids,omitempty"`
+			MarkedAt      *ftapi.Time `json:"marked_at,omitempty"`
+			Marked        bool        `json:"marked,omitempty"`
+			RetriableAt   *ftapi.Time `json:"retriable_at,omitempty"`
+		} `json:"experiancable"`
 	}
 	Experiences struct {
 		req        ftapi.RequestData
 		Collection []Experience
 	}
 	ExperienceCUParams struct {
-		UserID            int        `json:"user_id,omitempty"`
-		SkillID           int        `json:"skill_id,omitempty"`
-		ExperiancableID   int        `json:"experiancable_id,omitempty"`
-		ExperiancableType string     `json:"experiancable_type,omitempty"`
-		Experience        int        `json:"experience,omitempty"`
-		CreatedAt         ftapi.Time `json:"created_at,omitempty"`
-		CursusID          int        `json:"cursus_id,omitempty"`
+		UserID            int         `json:"user_id,omitempty"`
+		SkillID           int         `json:"skill_id,omitempty"`
+		ExperiancableID   int         `json:"experiancable_id,omitempty"`
+		ExperiancableType string      `json:"experiancable_type,omitempty"`
+		Experience        int         `json:"experience,omitempty"`
+		CreatedAt         *ftapi.Time `json:"created_at,omitempty"`
+		CursusID          int         `json:"cursus_id,omitempty"`
 	}
 )
 

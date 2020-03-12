@@ -9,9 +9,9 @@ import (
 type (
 	Skill struct {
 		req       ftapi.RequestData
-		ID        int        `json:"id,omitempty"`
-		Name      string     `json:"name,omitempty"`
-		CreatedAt ftapi.Time `json:"created_at,omitempty"`
+		ID        int         `json:"id,omitempty"`
+		Name      string      `json:"name,omitempty"`
+		CreatedAt *ftapi.Time `json:"created_at,omitempty"`
 	}
 	Skills struct {
 		req        ftapi.RequestData

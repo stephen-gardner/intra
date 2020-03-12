@@ -22,11 +22,6 @@ type (
 		req        ftapi.RequestData
 		Collection []Subnotion
 	}
-	SubnotionCUParams struct {
-		Name                  string               `json:"name,omitempty"`
-		NotionID              int                  `json:"notion_id,omitempty"`
-		AttachmentsAttributes []AttachmentCUParams `json:"attachments_attributes,omitempty"`
-	}
 	Notepad struct {
 		ID          int        `json:"id,omitempty"`
 		UserID      int        `json:"user_id,omitempty"`
@@ -36,30 +31,6 @@ type (
 		SubnotionID int        `json:"subnotion_id,omitempty"`
 	}
 )
-
-func (sn *Subnotion) Create(ctx context.Context, params SubnotionCUParams) ftapi.CachedRequest {
-	sn.req.Endpoint = ftapi.GetEndpoint("subnotions", nil)
-	sn.req.ExecuteMethod = func() {
-		sn.req.Create(ctx, sn, ftapi.EncapsulatedMarshal("subnotion", params))
-	}
-	return &sn.req
-}
-
-func (sn *Subnotion) Delete(ctx context.Context) ftapi.Request {
-	sn.req.Endpoint = ftapi.GetEndpoint("subnotions/"+strconv.Itoa(sn.ID), nil)
-	sn.req.ExecuteMethod = func() {
-		sn.req.Delete(ctx, sn)
-	}
-	return &sn.req
-}
-
-func (sn *Subnotion) Patch(ctx context.Context, params SubnotionCUParams) ftapi.Request {
-	sn.req.Endpoint = ftapi.GetEndpoint("subnotions/"+strconv.Itoa(sn.ID), nil)
-	sn.req.ExecuteMethod = func() {
-		sn.req.Patch(ctx, ftapi.EncapsulatedMarshal("subnotion", params))
-	}
-	return &sn.req
-}
 
 func (sn *Subnotion) Get(ctx context.Context) ftapi.CachedRequest {
 	sn.req.Endpoint = ftapi.GetEndpoint("subnotions/"+strconv.Itoa(sn.ID), nil)

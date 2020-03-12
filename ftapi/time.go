@@ -12,6 +12,10 @@ type Time struct {
 
 const TimeFormat = "2006-01-02T15:04:05.000Z"
 
+func NewTime(t time.Time) *Time {
+	return &Time{Time: t}
+}
+
 func (it *Time) MarshalJSON() ([]byte, error) {
 	return []byte(fmt.Sprintf("%q", it.UTC().Format(TimeFormat))), nil
 }

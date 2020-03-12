@@ -9,23 +9,23 @@ import (
 type (
 	Endpoint struct {
 		req         ftapi.RequestData
-		ID          int        `json:"id,omitempty"`
-		URL         string     `json:"url,omitempty"`
-		Description string     `json:"description,omitempty"`
-		CreatedAt   ftapi.Time `json:"created_at,omitempty"`
-		UpdatedAt   ftapi.Time `json:"updated_at,omitempty"`
-		Campus      []Campus   `json:"campus,omitempty"`
+		ID          int         `json:"id,omitempty"`
+		URL         string      `json:"url,omitempty"`
+		Description string      `json:"description,omitempty"`
+		CreatedAt   *ftapi.Time `json:"created_at,omitempty"`
+		UpdatedAt   *ftapi.Time `json:"updated_at,omitempty"`
+		Campus      []Campus    `json:"campus,omitempty"`
 	}
 	Endpoints struct {
 		req        ftapi.RequestData
 		Collection []Endpoint
 	}
 	EndpointCUParams struct {
-		URL         string     `json:"url,omitempty"`
-		Secret      string     `json:"secret,omitempty"`
-		Description string     `json:"description,omitempty"`
-		CreatedAt   ftapi.Time `json:"created_at,omitempty"`
-		UpdatedAt   ftapi.Time `json:"updated_at,omitempty"`
+		URL         string      `json:"url,omitempty"`
+		Secret      string      `json:"secret,omitempty"`
+		Description string      `json:"description,omitempty"`
+		CreatedAt   *ftapi.Time `json:"created_at,omitempty"`
+		UpdatedAt   *ftapi.Time `json:"updated_at,omitempty"`
 	}
 )
 

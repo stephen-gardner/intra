@@ -23,17 +23,6 @@ type (
 		req        ftapi.RequestData
 		Collection []Attachment
 	}
-	AttachmentCUParams struct {
-		Kind                 string `json:"kind,omitempty"`
-		LanguageID           int    `json:"language_id,omitempty"`
-		Untranslatable       bool   `json:"untranslatable,omitempty"`
-		AttachableAttributes []struct {
-			Name  string `json:"name,omitempty"`
-			Type  string `json:"attachable_type,omitempty"`
-			PDF   string `json:"pdf,omitempty"`
-			Video string `json:"video,omitempty"`
-		} `json:"attachable_attributes"`
-	}
 	AttachmentCode struct {
 		Code string `json:"code,omitempty"`
 	}
@@ -112,30 +101,6 @@ func (attach *Attachment) UnmarshalJSON(data []byte) error {
 		return fmt.Errorf("unknown attachment type: %s", attach.Type)
 	}
 	return json.Unmarshal(data, attach.Content)
-}
-
-func (attach *Attachment) Create(ctx context.Context, params AttachmentCUParams) ftapi.CachedRequest {
-	attach.req.Endpoint = ftapi.GetEndpoint("attachments", nil)
-	attach.req.ExecuteMethod = func() {
-		attach.req.Create(ctx, attach, ftapi.EncapsulatedMarshal("attachment", params))
-	}
-	return &attach.req
-}
-
-func (attach *Attachment) Delete(ctx context.Context) ftapi.Request {
-	attach.req.Endpoint = ftapi.GetEndpoint("attachments/"+strconv.Itoa(attach.ID), nil)
-	attach.req.ExecuteMethod = func() {
-		attach.req.Delete(ctx, attach)
-	}
-	return &attach.req
-}
-
-func (attach *Attachment) Patch(ctx context.Context, params AttachmentCUParams) ftapi.Request {
-	attach.req.Endpoint = ftapi.GetEndpoint("attachments/"+strconv.Itoa(attach.ID), nil)
-	attach.req.ExecuteMethod = func() {
-		attach.req.Patch(ctx, ftapi.EncapsulatedMarshal("attachment", params))
-	}
-	return &attach.req
 }
 
 func (attach *Attachment) Get(ctx context.Context) ftapi.CachedRequest {

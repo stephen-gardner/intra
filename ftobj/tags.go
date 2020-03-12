@@ -20,12 +20,13 @@ type (
 		Collection []Tag
 	}
 	TagCUParams struct {
-		Name                string `json:"name,omitempty"`
-		TagsUsersAttributes []struct {
-			ID     int `json:"id,omitempty"`
-			UserID int `json:"user_id,omitempty"`
-		} `json:"tags_users_attributes"`
-		CursusIDs []int `json:"cursus_ids,omitempty"`
+		Name                string     `json:"name,omitempty"`
+		TagsUsersAttributes []TagsUser `json:"tags_users_attributes"`
+		CursusIDs           []int      `json:"cursus_ids,omitempty"`
+	}
+	TagsUser struct {
+		ID     int `json:"id,omitempty"`
+		UserID int `json:"user_id,omitempty"`
 	}
 )
 
