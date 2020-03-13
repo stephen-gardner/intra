@@ -4,7 +4,6 @@ import (
 	"context"
 	"intra/ftapi"
 	"strconv"
-	"time"
 )
 
 type (
@@ -23,12 +22,12 @@ type (
 		Collection []Subnotion
 	}
 	Notepad struct {
-		ID          int        `json:"id,omitempty"`
-		UserID      int        `json:"user_id,omitempty"`
-		Content     string     `json:"content,omitempty"`
-		CreatedAt   *time.Time `json:"created_at,omitempty"`
-		UpdatedAt   *time.Time `json:"updated_at,omitempty"`
-		SubnotionID int        `json:"subnotion_id,omitempty"`
+		ID          int         `json:"id,omitempty"`
+		UserID      int         `json:"user_id,omitempty"`
+		Content     string      `json:"content,omitempty"`
+		CreatedAt   *ftapi.Time `json:"created_at,omitempty"`
+		UpdatedAt   *ftapi.Time `json:"updated_at,omitempty"`
+		SubnotionID int         `json:"subnotion_id,omitempty"`
 	}
 )
 

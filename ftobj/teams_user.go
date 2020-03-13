@@ -4,21 +4,20 @@ import (
 	"context"
 	"intra/ftapi"
 	"strconv"
-	"time"
 )
 
 type (
 	TeamsUser struct {
 		req        ftapi.RequestData
-		ID         int        `json:"id,omitempty"`
-		TeamID     int        `json:"team_id,omitempty"`
-		UserID     int        `json:"user_id,omitempty"`
-		CreatedAt  *time.Time `json:"created_at,omitempty"`
-		Validated  bool       `json:"validated,omitempty"`
-		Leader     bool       `json:"leader,omitempty"`
-		Occurrence int        `json:"occurrence,omitempty"`
-		Team       *Team      `json:"team,omitempty"`
-		User       *User      `json:"user,omitempty"`
+		ID         int         `json:"id,omitempty"`
+		TeamID     int         `json:"team_id,omitempty"`
+		UserID     int         `json:"user_id,omitempty"`
+		CreatedAt  *ftapi.Time `json:"created_at,omitempty"`
+		Validated  bool        `json:"validated,omitempty"`
+		Leader     bool        `json:"leader,omitempty"`
+		Occurrence int         `json:"occurrence,omitempty"`
+		Team       *Team       `json:"team,omitempty"`
+		User       *User       `json:"user,omitempty"`
 	}
 	TeamsUsers struct {
 		req        ftapi.RequestData
