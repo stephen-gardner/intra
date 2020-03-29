@@ -17,6 +17,9 @@ func NewWebTime(t time.Time) *Time {
 }
 
 func (wt *Time) MarshalJSON() ([]byte, error) {
+	if wt.IsZero() {
+		return []byte("null"), nil
+	}
 	return []byte(fmt.Sprintf("%q", wt.Format(WebTimeFormat))), nil
 }
 

@@ -52,13 +52,7 @@ type (
 			BeginAt  *ftapi.Time `json:"begin_at,omitempty"`
 			FilledAt *ftapi.Time `json:"filled_at,omitempty"`
 		} `json:"scale_teams,omitempty"`
-		TeamUploads []struct {
-			ID        int         `json:"id,omitempty"`
-			FinalMark int         `json:"final_mark,omitempty"`
-			Comment   string      `json:"comment,omitempty"`
-			CreatedAt *ftapi.Time `json:"created_at,omitempty"`
-			UploadID  int         `json:"upload_id,omitempty"`
-		} `json:"team_uploads,omitempty"`
+		TeamUploads []TeamsUpload `json:"team_uploads,omitempty"`
 	}
 	Teams struct {
 		req        ftapi.RequestData

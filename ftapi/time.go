@@ -17,6 +17,9 @@ func NewTime(t time.Time) *Time {
 }
 
 func (it *Time) MarshalJSON() ([]byte, error) {
+	if it.IsZero() {
+		return []byte("null"), nil
+	}
 	return []byte(fmt.Sprintf("%q", it.UTC().Format(TimeFormat))), nil
 }
 
